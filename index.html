@@ -1,675 +1,185 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <!-- ═══ SEO BÁSICO ═══════════════════════════════════════════════ -->
-  <title>Ignitia · Performance Digital B2B | getignitia.com</title>
-  <meta name="description" content="El problema no es el tráfico, es la falta de claridad. Ignitia ayuda a negocios B2B a medir correctamente, estructurar campañas y optimizar basándose en datos reales — no suposiciones." />
-  <meta name="keywords" content="consultoría performance digital, Google Ads B2B, medición GA4, optimización campañas, performance marketing México" />
-  <meta name="author" content="Ignitia Performance Consulting" />
-  <meta name="robots" content="index, follow" />
-  <link rel="canonical" href="https://getignitia.com" />
+// Ignitia · Audit Engine — Netlify Serverless Function
+// Rate limiting: 1 audit per IP per 24 hours
 
-  <!-- ═══ OPEN GRAPH (LinkedIn, Facebook, WhatsApp) ════════════════ -->
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://getignitia.com" />
-  <meta property="og:title" content="Ignitia · Performance Digital B2B" />
-  <meta property="og:description" content="El problema no es el tráfico, es la falta de claridad. Medición confiable, estructura correcta y optimización basada en datos reales. Agenda tu diagnóstico gratuito en getignitia.com." />
-  <meta property="og:image" content="https://getignitia.com/og_image.png" />
-  <meta property="og:image:width" content="1200" />
-  <meta property="og:image:height" content="630" />
-  <meta property="og:image:alt" content="Ignitia — Performance Consulting" />
-  <meta property="og:site_name" content="Ignitia" />
-  <meta property="og:locale" content="es_MX" />
-  <meta property="og:locale:alternate" content="en_US" />
+const rateLimitStore = new Map();
 
-  <!-- ═══ TWITTER / X CARD ═════════════════════════════════════════ -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:url" content="https://getignitia.com" />
-  <meta name="twitter:title" content="Ignitia · Performance Digital B2B" />
-  <meta name="twitter:description" content="El problema no es el tráfico, es la falta de claridad. Medición confiable, estructura correcta y optimización basada en datos reales. Agenda tu diagnóstico gratuito en getignitia.com." />
-  <meta name="twitter:image" content="https://getignitia.com/og_image.png" />
+function isRateLimited(ip) {
+  const now = Date.now();
+  const windowMs = 24 * 60 * 60 * 1000; // 24 hours
 
-  <!-- ═══ FAVICON ═══════════════════════════════════════════════════ -->
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23FF4500'/><text y='.9em' font-size='80'>🔥</text></svg>" />
-
-  <!-- ═══ SCHEMA.ORG STRUCTURED DATA ══════════════════════════════ -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "ProfessionalService",
-    "name": "Ignitia",
-    "description": "Consultoría de performance y medición digital para negocios B2B. Google Ads, GA4, optimización basada en datos.",
-    "url": "https://getignitia.com",
-    "email": "hola@getignitia.com",
-    "areaServed": ["MX", "US", "LATAM"],
-    "serviceType": ["Performance Marketing", "Google Ads Management", "GA4 Setup", "Digital Consulting"],
-    "slogan": "Data-driven. Results-focused."
-  }
-  </script>
-  <!-- ═══ GOOGLE ANALYTICS 4 ═══════════════════════════════════════ -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-WK0T1JZZPT"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-WK0T1JZZPT');
-  </script>
-
-  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-  <style>
-    @font-face { font-family: 'Supply'; src: url('https://fonts.cdnfonts.com/s/77402/Supply-Regular.woff') format('woff'); }
-    @font-face { font-family: 'Cordia New'; src: url('https://fonts.cdnfonts.com/s/15444/CordiaNew.woff') format('woff'); }
-
-    :root {
-      --c-orange:      #FF4500;
-      --c-orange-h:    #FF6A33;
-      --c-orange-dark: #c43300;
-      --c-bg:          #060a10;
-      --c-surf-low:    #171c22;
-      --c-surf-mid:    #0f141a;
-      --c-surf-high:   #31353c;
-      --c-border:      #21262d;
-      --c-text:        #e6edf3;
-      --c-text-sec:    #c9d1d9;
-      --c-text-muted:  #484f58;
-      --c-green:       #3fb950;
-      --c-yellow:      #d29922;
-      --c-red:         #E24B4A;
-      --c-blue:        #a2c9ff;
+  if (rateLimitStore.has(ip)) {
+    const lastCall = rateLimitStore.get(ip);
+    if (now - lastCall < windowMs) {
+      const hoursLeft = Math.ceil((windowMs - (now - lastCall)) / (1000 * 60 * 60));
+      return { limited: true, hoursLeft };
     }
-
-    * { box-sizing: border-box; }
-
-    body {
-      background: var(--c-bg);
-      color: var(--c-text);
-      font-family: 'Cordia New', 'Space Grotesk', monospace;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      overflow-x: hidden;
-    }
-
-    .font-supply {
-      font-family: 'Supply', 'Space Grotesk', sans-serif;
-      letter-spacing: -0.02em;
-    }
-
-    /* STATUS DOT PULSE */
-    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
-    .pulse { animation: pulse 2s infinite; }
-
-    /* FADE IN ON LOAD */
-    @keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
-    .fade-up { animation: fadeUp 0.6s ease forwards; }
-    .fade-up-2 { animation: fadeUp 0.6s 0.15s ease both; }
-    .fade-up-3 { animation: fadeUp 0.6s 0.3s ease both; }
-
-    /* SCROLLBAR */
-    ::-webkit-scrollbar { width: 4px; }
-    ::-webkit-scrollbar-track { background: var(--c-bg); }
-    ::-webkit-scrollbar-thumb { background: var(--c-surf-high); border-radius: 2px; }
-
-    /* SCORE BADGES */
-    .badge {
-      display: inline-flex; align-items: center; gap: 5px;
-      font-size: 10px; font-weight: 700; padding: 3px 10px;
-      border-radius: 20px; letter-spacing: 0.1em;
-    }
-    .badge::before { content:""; width:5px; height:5px; border-radius:50%; flex-shrink:0; }
-    .badge-red    { background:rgba(226,75,74,.12); color:var(--c-red);    border:1px solid rgba(226,75,74,.3); }
-    .badge-red::before    { background:var(--c-red); }
-    .badge-yellow { background:rgba(210,153,34,.12); color:var(--c-yellow); border:1px solid rgba(210,153,34,.3); }
-    .badge-yellow::before { background:var(--c-yellow); }
-    .badge-green  { background:rgba(63,185,80,.12);  color:var(--c-green);  border:1px solid rgba(63,185,80,.3); }
-    .badge-green::before  { background:var(--c-green); }
-
-    /* SECTION PREFIX */
-    .sec-pre { font-size:10px; color:var(--c-orange); letter-spacing:.2em; margin-bottom:.4rem; display:flex; align-items:center; gap:6px; }
-    .sec-pre::before { content:"//"; color:var(--c-text-muted); }
-
-    /* BENTO CARD */
-    .bento { background:var(--c-surf-low); border:1px solid var(--c-border); transition:border-color .2s, background .2s; }
-    .bento:hover { border-color: var(--c-surf-high); background: #1a2028; }
-    .bento-featured { border-color: var(--c-orange) !important; }
-
-    /* CTA BUTTONS */
-    .btn-primary {
-      background:var(--c-orange); color:#fff; border:none;
-      padding:13px 28px; border-radius:4px; font-size:11px; font-weight:700;
-      cursor:pointer; font-family:'Cordia New','Space Grotesk',monospace;
-      letter-spacing:.15em; text-transform:uppercase; transition:background .2s;
-      display:inline-flex; align-items:center; gap:8px;
-    }
-    .btn-primary:hover { background:var(--c-orange-h); }
-    .btn-ghost {
-      background:transparent; color:var(--c-text-sec);
-      border:1px solid var(--c-border);
-      padding:13px 28px; border-radius:4px; font-size:11px;
-      cursor:pointer; font-family:'Cordia New','Space Grotesk',monospace;
-      letter-spacing:.15em; text-transform:uppercase; transition:border-color .2s, color .2s;
-      display:inline-flex; align-items:center; gap:8px;
-    }
-    .btn-ghost:hover { border-color:var(--c-text-muted); color:var(--c-text); }
-
-    /* PROGRESS BAR */
-    .prog-bar { height:4px; background:var(--c-surf-high); border-radius:2px; overflow:hidden; }
-    .prog-fill { height:100%; border-radius:2px; background:var(--c-orange); }
-
-    /* CHECKLIST */
-    .checklist { list-style:none; padding:0; margin:0; }
-    .checklist li {
-      font-size:11px; color:var(--c-text-sec); padding:5px 0;
-      border-bottom:1px solid var(--c-border);
-      display:flex; gap:8px; align-items:flex-start;
-    }
-    .checklist li:last-child { border-bottom:none; }
-    .checklist li::before { content:">"; color:var(--c-orange); flex-shrink:0; }
-
-    /* PRICE CARD */
-    .price-card { background:var(--c-surf-low); border:1px solid var(--c-border); border-radius:4px; overflow:hidden; }
-    .price-card-header { padding:10px 16px; background:var(--c-surf-mid); border-bottom:1px solid var(--c-border); display:flex; justify-content:space-between; align-items:center; }
-  </style>
-
-  <script>
-    tailwind.config = {
-      darkMode: "class",
-      theme: {
-        extend: {
-          colors: {
-            "c-orange": "#FF4500",
-            "c-bg": "#060a10",
-            "c-surf-low": "#171c22",
-            "c-surf-mid": "#0f141a",
-            "c-surf-high": "#31353c",
-            "c-border": "#21262d",
-          }
-        }
-      }
-    }
-  </script>
-</head>
-<body class="dark">
-
-<!-- NETLIFY FORM DETECTION — required for AJAX submissions -->
-<form name="contact" data-netlify="true" netlify-honeypot="bot-field" hidden>
-  <input type="text" name="nombre" />
-  <input type="email" name="correo" />
-  <input type="text" name="empresa" />
-  <select name="problema">
-    <option value="medicion">medicion</option>
-    <option value="campanas">campanas</option>
-    <option value="estructura">estructura</option>
-    <option value="auditoria">auditoria</option>
-  </select>
-</form>
-
-<!-- ═══════════════════════════════ NAV ═══════════════════════════════ -->
-<header style="position:fixed;top:0;z-index:50;width:100%;background:var(--c-surf-mid);border-bottom:1px solid var(--c-border);padding:1rem 2.5rem;display:flex;justify-content:space-between;align-items:center;">
-  <a href="#" style="display:flex;align-items:center;gap:10px;text-decoration:none;">
-    <div style="width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,#FF4500,#c43300);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">🔥</div>
-    <div>
-      <div class="font-supply" style="font-size:18px;font-weight:700;color:var(--c-text);">IGNITIA</div>
-      <div style="font-size:9px;color:var(--c-text-muted);letter-spacing:.2em;">DATA-DRIVEN. RESULTS-FOCUSED.</div>
-    </div>
-  </a>
-  <nav style="display:flex;gap:2rem;list-style:none;" class="hidden md:flex">
-    <a href="#servicios" style="font-size:11px;color:var(--c-text-muted);text-decoration:none;transition:color .2s;" onmouseover="this.style.color='var(--c-orange)'" onmouseout="this.style.color='var(--c-text-muted)'" data-es="SERVICIOS" data-en="SERVICES">SERVICIOS</a>
-    <a href="#metodologia" style="font-size:11px;color:var(--c-text-muted);text-decoration:none;" onmouseover="this.style.color='var(--c-orange)'" onmouseout="this.style.color='var(--c-text-muted)'" data-es="METODOLOGÍA" data-en="METHODOLOGY">METODOLOGÍA</a>
-    <a href="#precios" style="font-size:11px;color:var(--c-text-muted);text-decoration:none;" onmouseover="this.style.color='var(--c-orange)'" onmouseout="this.style.color='var(--c-text-muted)'" data-es="PRECIOS" data-en="PRICING">PRECIOS</a>
-  </nav>
-  <div style="display:flex;align-items:center;gap:1rem;">
-    <div style="display:flex;align-items:center;gap:6px;font-size:10px;color:var(--c-green);" class="hidden md:flex">
-      <div class="pulse" style="width:6px;height:6px;border-radius:50%;background:var(--c-green);"></div>
-      SYSTEM_ONLINE
-    </div>
-    <button id="langToggle" onclick="toggleLang()" style="background:var(--c-surf-high);color:var(--c-text-muted);border:1px solid var(--c-border);padding:6px 14px;border-radius:4px;font-size:10px;font-weight:700;cursor:pointer;font-family:'Cordia New','Space Grotesk',monospace;letter-spacing:.15em;text-transform:uppercase;transition:all .2s;" onmouseover="this.style.borderColor='var(--c-orange)';this.style.color='var(--c-orange)'" onmouseout="this.style.borderColor='var(--c-border)';this.style.color='var(--c-text-muted)'">EN</button>
-    <a href="#contacto">
-      <button class="btn-primary" style="padding:8px 18px;font-size:11px;" data-es="INICIAR_AUDITORÍA" data-en="START_AUDIT">INICIAR_AUDITORÍA</button>
-    </a>
-  </div>
-</header>
-
-<main style="padding-top:72px;">
-
-<!-- ═══════════════════════════════ HERO ══════════════════════════════ -->
-<section style="min-height:calc(100vh - 72px);padding:5rem 2.5rem 4rem;max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1.2fr 1fr;gap:4rem;align-items:center;" class="fade-up">
-  <div>
-    <div style="display:inline-flex;align-items:center;gap:6px;font-size:10px;color:var(--c-orange);letter-spacing:.2em;margin-bottom:1.5rem;padding:4px 12px;background:rgba(255,69,0,.08);border:1px solid rgba(255,69,0,.2);border-radius:2px;">
-      <span style="color:var(--c-text-muted)">//</span> ACTIVE_AUDIT · PERFORMANCE_CONSULTING
-    </div>
-    <h1 class="font-supply fade-up-2" style="font-size:clamp(2.2rem,4vw,3.6rem);font-weight:700;line-height:1.08;margin-bottom:1.4rem;">
-      <span data-es="EL PROBLEMA" data-en="THE PROBLEM">EL PROBLEMA</span><br>
-      <span data-es="NO ES EL" data-en="IS NOT THE">NO ES EL</span> <span style="color:var(--c-orange);" data-es="TRÁFICO." data-en="TRAFFIC.">TRÁFICO.</span><br>
-      <span data-es="ES LA FALTA DE" data-en="IT'S THE LACK OF">ES LA FALTA DE</span> <span style="color:var(--c-text-muted);" data-es="CLARIDAD." data-en="CLARITY.">CLARIDAD.</span>
-    </h1>
-    <p class="fade-up-3" style="font-size:12px;color:var(--c-text-sec);line-height:1.85;margin-bottom:2.2rem;max-width:460px;" data-es="IGNITIA ES LA CAPA DE CONSULTORÍA ENTRE TUS CAMPAÑAS Y TUS DECISIONES DE NEGOCIO. MEDICIÓN CONFIABLE, ESTRUCTURA CORRECTA, OPTIMIZACIÓN BASADA EN DATOS REALES — NO SUPOSICIONES." data-en="IGNITIA IS THE CONSULTING LAYER BETWEEN YOUR CAMPAIGNS AND YOUR BUSINESS DECISIONS. RELIABLE MEASUREMENT, CORRECT STRUCTURE, DATA-DRIVEN OPTIMIZATION — NOT GUESSWORK.">
-      IGNITIA ES LA CAPA DE CONSULTORÍA ENTRE TUS CAMPAÑAS Y TUS DECISIONES DE NEGOCIO.
-      MEDICIÓN CONFIABLE, ESTRUCTURA CORRECTA, OPTIMIZACIÓN BASADA EN DATOS REALES — NO SUPOSICIONES.
-    </p>
-    <div style="display:flex;gap:12px;flex-wrap:wrap;">
-      <a href="#contacto"><button class="btn-primary" data-es="EXECUTE_DIAGNÓSTICO" data-en="EXECUTE_DIAGNOSTIC">EXECUTE_DIAGNÓSTICO <span class="material-symbols-outlined" style="font-size:16px;">terminal</span></button></a>
-      <a href="#metodologia"><button class="btn-ghost" data-es="VER_METODOLOGÍA" data-en="VIEW_METHODOLOGY">VER_METODOLOGÍA</button></a>
-    </div>
-  </div>
-
-  <!-- AUDIT CARD -->
-  <div style="background:var(--c-surf-low);border:1px solid var(--c-border);border-radius:8px;overflow:hidden;" class="hidden lg:block fade-up-3">
-    <div style="background:var(--c-surf-mid);padding:10px 14px;border-bottom:1px solid var(--c-border);display:flex;justify-content:space-between;align-items:center;">
-      <span style="font-size:10px;color:var(--c-text-muted);letter-spacing:.15em;">AUDIT_REPORT // EJEMPLO</span>
-      <span style="font-size:10px;color:var(--c-orange);">#IGN-2024-001</span>
-    </div>
-    <div style="padding:1.4rem;">
-      <div class="font-supply" style="font-size:14px;font-weight:700;margin-bottom:3px;">AUTOMATS &amp; ACCESSORIES</div>
-      <div style="font-size:10px;color:var(--c-text-muted);margin-bottom:1.2rem;">B2B LEAD GENERATION · GOOGLE ADS ACTIVE</div>
-
-      <div style="font-size:10px;color:var(--c-text-muted);margin-bottom:.4rem;">SCANNING_ASSETS...</div>
-      <div style="display:flex;justify-content:space-between;margin-bottom:1rem;">
-        <div class="prog-bar" style="width:84%;"><div class="prog-fill" style="width:84%;"></div></div>
-        <span style="font-size:10px;color:var(--c-orange);margin-left:8px;">84%</span>
-      </div>
-
-      <div style="display:flex;flex-direction:column;gap:2px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:var(--c-surf-high);border-radius:3px;">
-          <span style="font-size:11px;color:var(--c-text-muted);">GA4_EVENTS</span>
-          <span class="badge badge-red">CRITICAL</span>
-        </div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:var(--c-surf-high);border-radius:3px;">
-          <span style="font-size:11px;color:var(--c-text-muted);">CONVERSION_TRACKING</span>
-          <span class="badge badge-red">NOT_SET</span>
-        </div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:var(--c-surf-high);border-radius:3px;">
-          <span style="font-size:11px;color:var(--c-text-muted);">CAMPAIGN_STRUCTURE</span>
-          <span class="badge badge-yellow">REVIEW</span>
-        </div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:var(--c-surf-high);border-radius:3px;">
-          <span style="font-size:11px;color:var(--c-text-muted);">CTA_VISIBILITY</span>
-          <span class="badge badge-yellow">WEAK</span>
-        </div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:var(--c-surf-high);border-radius:3px;">
-          <span style="font-size:11px;color:var(--c-text-muted);">UTM_SETUP</span>
-          <span class="badge badge-green">ACTIVE</span>
-        </div>
-      </div>
-
-      <div style="margin-top:1rem;">
-        <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--c-text-muted);margin-bottom:5px;">
-          <span>OPTIMIZATION_POTENTIAL</span><span style="color:var(--c-orange);">78%</span>
-        </div>
-        <div class="prog-bar"><div class="prog-fill" style="width:78%;"></div></div>
-      </div>
-    </div>
-    <div style="background:var(--c-surf-mid);border-top:1px solid var(--c-border);padding:8px 14px;display:flex;justify-content:space-between;font-size:10px;color:var(--c-text-muted);">
-      <span>STATUS: MEASUREMENT_FIRST</span>
-      <span style="color:var(--c-orange);">→ EXECUTE</span>
-    </div>
-  </div>
-</section>
-
-<!-- ═════════════════════════ PROBLEM STATEMENT ═══════════════════════ -->
-<section style="padding:4rem 2.5rem;border-top:1px solid var(--c-border);">
-  <div style="max-width:1200px;margin:0 auto;">
-    <div class="sec-pre">PROBLEM_STATEMENT</div>
-    <h2 class="font-supply" style="font-size:clamp(1.6rem,3vw,2.4rem);font-weight:700;margin-bottom:.6rem;" data-es="SIN MEDICIÓN,<br>LA OPTIMIZACIÓN ES RUIDO." data-en="WITHOUT MEASUREMENT,<br>OPTIMIZATION IS NOISE.">SIN MEDICIÓN,<br>LA OPTIMIZACIÓN ES RUIDO.</h2>
-    <p style="font-size:12px;color:var(--c-text-sec);margin-bottom:2.5rem;max-width:520px;line-height:1.8;" data-es="LA MAYORÍA DE LOS NEGOCIOS B2B INVIERTEN EN ADS SIN SABER QUÉ GENERA LEADS. EL PROBLEMA NO ES EL PRESUPUESTO — ES LA FALTA DE ESTRUCTURA Y DATOS CONFIABLES." data-en="MOST B2B BUSINESSES INVEST IN ADS WITHOUT KNOWING WHAT GENERATES LEADS. THE PROBLEM ISN'T THE BUDGET — IT'S THE LACK OF STRUCTURE AND RELIABLE DATA.">LA MAYORÍA DE LOS NEGOCIOS B2B INVIERTEN EN ADS SIN SABER QUÉ GENERA LEADS. EL PROBLEMA NO ES EL PRESUPUESTO — ES LA FALTA DE ESTRUCTURA Y DATOS CONFIABLES.</p>
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--c-border);border:1px solid var(--c-border);border-radius:6px;overflow:hidden;" class="grid-cols-2-on-mobile">
-      <div style="background:var(--c-surf-low);padding:1.5rem;">
-        <div class="font-supply" style="font-size:36px;font-weight:700;color:var(--c-surf-high);margin-bottom:1rem;">01</div>
-        <h4 style="font-size:11px;font-weight:700;color:var(--c-text);margin-bottom:8px;" data-es="DATOS NO CONFIABLES" data-en="UNRELIABLE DATA">DATOS NO CONFIABLES</h4>
-        <p style="font-size:11px;color:var(--c-text-muted);line-height:1.7;" data-es="GA4 INSTALADO SIN EVENTOS. LAS MÉTRICAS NO REFLEJAN LA REALIDAD DEL NEGOCIO." data-en="GA4 INSTALLED WITHOUT EVENTS. METRICS DON'T REFLECT BUSINESS REALITY.">GA4 INSTALADO SIN EVENTOS. LAS MÉTRICAS NO REFLEJAN LA REALIDAD DEL NEGOCIO.</p>
-      </div>
-      <div style="background:var(--c-surf-low);padding:1.5rem;">
-        <div class="font-supply" style="font-size:36px;font-weight:700;color:var(--c-surf-high);margin-bottom:1rem;">02</div>
-        <h4 style="font-size:11px;font-weight:700;color:var(--c-text);margin-bottom:8px;" data-es="CAMPAÑAS SIN ESTRUCTURA" data-en="UNSTRUCTURED CAMPAIGNS">CAMPAÑAS SIN ESTRUCTURA</h4>
-        <p style="font-size:11px;color:var(--c-text-muted);line-height:1.7;" data-es="PRESUPUESTO ACTIVO SIN CLARIDAD SOBRE QUÉ KEYWORDS O AUDIENCIAS GENERAN VALOR REAL." data-en="ACTIVE BUDGET WITH NO CLARITY ON WHICH KEYWORDS OR AUDIENCES GENERATE REAL VALUE.">PRESUPUESTO ACTIVO SIN CLARIDAD SOBRE QUÉ KEYWORDS O AUDIENCIAS GENERAN VALOR REAL.</p>
-      </div>
-      <div style="background:var(--c-surf-low);padding:1.5rem;">
-        <div class="font-supply" style="font-size:36px;font-weight:700;color:var(--c-surf-high);margin-bottom:1rem;">03</div>
-        <h4 style="font-size:11px;font-weight:700;color:var(--c-text);margin-bottom:8px;" data-es="CICLO ROTO" data-en="BROKEN CYCLE">CICLO ROTO</h4>
-        <p style="font-size:11px;color:var(--c-text-muted);line-height:1.7;" data-es="SIN CONVERSIONES CONFIGURADAS, EL ALGORITMO NO APRENDE. CADA PESO GASTADO ES RUIDO." data-en="WITHOUT CONFIGURED CONVERSIONS, THE ALGORITHM DOESN'T LEARN. EVERY DOLLAR SPENT IS NOISE.">SIN CONVERSIONES CONFIGURADAS, EL ALGORITMO NO APRENDE. CADA PESO GASTADO ES RUIDO.</p>
-      </div>
-      <div style="background:var(--c-surf-low);padding:1.5rem;">
-        <div class="font-supply" style="font-size:36px;font-weight:700;color:var(--c-surf-high);margin-bottom:1rem;">04</div>
-        <h4 style="font-size:11px;font-weight:700;color:var(--c-text);margin-bottom:8px;" data-es="DECISIONES A CIEGAS" data-en="BLIND DECISIONS">DECISIONES A CIEGAS</h4>
-        <p style="font-size:11px;color:var(--c-text-muted);line-height:1.7;" data-es="SIN DATOS ACCIONABLES, NO HAY FORMA DE ESCALAR LO QUE FUNCIONA NI PARAR LO QUE NO." data-en="WITHOUT ACTIONABLE DATA, THERE'S NO WAY TO SCALE WHAT WORKS OR STOP WHAT DOESN'T.">SIN DATOS ACCIONABLES, NO HAY FORMA DE ESCALAR LO QUE FUNCIONA NI PARAR LO QUE NO.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════ SERVICES (BENTO) ══════════════════ -->
-<section id="servicios" style="padding:4rem 2.5rem;border-top:1px solid var(--c-border);">
-  <div style="max-width:1200px;margin:0 auto;">
-    <div class="sec-pre">SERVICES_MODULE</div>
-    <h2 class="font-supply" style="font-size:clamp(1.6rem,3vw,2.4rem);font-weight:700;margin-bottom:.6rem;" data-es="PERFORMANCE + MEDICIÓN.<br>SIN AGENCIA GENÉRICA." data-en="PERFORMANCE + MEASUREMENT.<br>NO GENERIC AGENCY.">PERFORMANCE + MEDICIÓN.<br>SIN AGENCIA GENÉRICA.</h2>
-    <p style="font-size:12px;color:var(--c-text-sec);margin-bottom:2.5rem;max-width:520px;line-height:1.8;" data-es="NO COMPRAMOS MEDIOS. NO CREAMOS CONTENIDO. SOMOS LA CAPA ESTRATÉGICA ENTRE TUS CAMPAÑAS Y TUS DECISIONES." data-en="WE DON'T BUY MEDIA. WE DON'T CREATE CONTENT. WE ARE THE STRATEGIC LAYER BETWEEN YOUR CAMPAIGNS AND YOUR DECISIONS.">NO COMPRAMOS MEDIOS. NO CREAMOS CONTENIDO. SOMOS LA CAPA ESTRATÉGICA ENTRE TUS CAMPAÑAS Y TUS DECISIONES.</p>
-
-    <!-- BENTO GRID -->
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:auto;gap:1px;background:var(--c-border);border:1px solid var(--c-border);border-radius:6px;overflow:hidden;">
-
-      <!-- CORE SERVICE — spans 2 cols -->
-      <div class="bento bento-featured" style="grid-column:span 2;padding:2rem;display:flex;flex-direction:column;justify-content:space-between;min-height:320px;">
-        <div>
-          <span style="font-size:9px;letter-spacing:.2em;font-weight:700;padding:3px 10px;border-radius:2px;background:rgba(255,69,0,.15);color:var(--c-orange);border:1px solid rgba(255,69,0,.3);display:inline-block;margin-bottom:1rem;">CORE_SERVICE</span>
-          <h3 class="font-supply" style="font-size:1.8rem;font-weight:700;margin-bottom:.8rem;" data-es="GOOGLE ADS + PERFORMANCE ANALYSIS" data-en="GOOGLE ADS + PERFORMANCE ANALYSIS">GOOGLE ADS + PERFORMANCE ANALYSIS</h3>
-          <p style="font-size:12px;color:var(--c-text-muted);line-height:1.7;max-width:460px;margin-bottom:1.4rem;" data-es="GESTIÓN ESTRATÉGICA CON FOCO EN ESTRUCTURA, MEDICIÓN Y RESULTADOS MEDIBLES — NO SOLO EJECUCIÓN." data-en="STRATEGIC MANAGEMENT FOCUSED ON STRUCTURE, MEASUREMENT AND MEASURABLE RESULTS — NOT JUST EXECUTION.">GESTIÓN ESTRATÉGICA CON FOCO EN ESTRUCTURA, MEDICIÓN Y RESULTADOS MEDIBLES — NO SOLO EJECUCIÓN.</p>
-          <ul class="checklist" style="max-width:400px;">
-            <li data-es="OPTIMIZACIÓN DE CAMPAÑAS ACTIVAS" data-en="ACTIVE CAMPAIGN OPTIMIZATION">OPTIMIZACIÓN DE CAMPAÑAS ACTIVAS</li>
-            <li data-es="ESTRUCTURA DE KEYWORDS Y SEGMENTACIÓN" data-en="KEYWORD STRUCTURE AND TARGETING">ESTRUCTURA DE KEYWORDS Y SEGMENTACIÓN</li>
-            <li data-es="DASHBOARD LOOKER STUDIO" data-en="LOOKER STUDIO DASHBOARD">DASHBOARD LOOKER STUDIO</li>
-            <li data-es="REPORTES CON INSIGHTS ACCIONABLES" data-en="REPORTS WITH ACTIONABLE INSIGHTS">REPORTES CON INSIGHTS ACCIONABLES</li>
-          </ul>
-        </div>
-        <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-top:1.5rem;">
-          <span class="material-symbols-outlined" style="font-size:48px;color:var(--c-surf-high);">precision_manufacturing</span>
-          <span style="font-size:10px;color:var(--c-text-muted);" data-es="AVAILABILITY: HIGH_PRIORITY" data-en="AVAILABILITY: HIGH_PRIORITY">AVAILABILITY: HIGH_PRIORITY</span>
-        </div>
-      </div>
-
-      <!-- ENTRY POINT -->
-      <div style="background:var(--c-orange);padding:2rem;display:flex;flex-direction:column;justify-content:space-between;min-height:320px;">
-        <div>
-          <span style="font-size:9px;letter-spacing:.2em;font-weight:700;padding:3px 10px;border-radius:2px;background:rgba(0,0,0,.2);color:#fff;display:inline-block;margin-bottom:1rem;">ENTRY_POINT</span>
-          <h3 class="font-supply" style="font-size:1.4rem;font-weight:700;color:#fff;margin-bottom:.8rem;" data-es="AUDITORÍA DE SITIO Y TRÁFICO" data-en="SITE & TRAFFIC AUDIT">AUDITORÍA DE SITIO Y TRÁFICO</h3>
-          <p style="font-size:12px;color:rgba(255,255,255,.8);line-height:1.7;" data-es="DIAGNÓSTICO ESTRUCTURADO PARA IDENTIFICAR DÓNDE SE PIERDE TRÁFICO, LEADS Y OPORTUNIDADES." data-en="STRUCTURED DIAGNOSIS TO IDENTIFY WHERE TRAFFIC, LEADS AND OPPORTUNITIES ARE BEING LOST.">DIAGNÓSTICO ESTRUCTURADO PARA IDENTIFICAR DÓNDE SE PIERDE TRÁFICO, LEADS Y OPORTUNIDADES.</p>
-        </div>
-        <button style="margin-top:1.5rem;width:100%;padding:12px;background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.6);font-family:'Cordia New','Space Grotesk',monospace;font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;border-radius:3px;transition:background .2s;" onmouseover="this.style.background='rgba(0,0,0,.2)'" onmouseout="this.style.background='transparent'" data-es="EXECUTE_NEXT_STEP →" data-en="EXECUTE_NEXT_STEP →">EXECUTE_NEXT_STEP →</button>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════ FRAMEWORK ═════════════════════════ -->
-<section id="metodologia" style="padding:4rem 2.5rem;border-top:1px solid var(--c-border);background:var(--c-surf-mid);">
-  <div style="max-width:1200px;margin:0 auto;">
-    <div class="sec-pre">WORKING_FRAMEWORK</div>
-    <h2 class="font-supply" style="font-size:clamp(1.6rem,3vw,2.4rem);font-weight:700;margin-bottom:2.5rem;" data-es="THE_IGNITIA_PROTOCOL" data-en="THE_IGNITIA_PROTOCOL">THE_IGNITIA_PROTOCOL</h2>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0;">
-      <div style="padding:0 2rem 0 0;border-right:1px solid var(--c-border);">
-        <div class="font-supply" style="font-size:56px;font-weight:700;color:var(--c-orange);line-height:1;margin-bottom:1rem;">01</div>
-        <h4 style="font-size:12px;font-weight:700;letter-spacing:.15em;margin-bottom:8px;">MEASUREMENT_FIRST</h4>
-        <p style="font-size:11px;color:var(--c-text-muted);line-height:1.7;" data-es="ANTES DE OPTIMIZAR CUALQUIER CAMPAÑA, VALIDAMOS QUE LOS DATOS SEAN CONFIABLES. SIN ESTO, TODO LO DEMÁS ES RUIDO." data-en="BEFORE OPTIMIZING ANY CAMPAIGN, WE VALIDATE THAT THE DATA IS RELIABLE. WITHOUT THIS, EVERYTHING ELSE IS NOISE.">ANTES DE OPTIMIZAR CUALQUIER CAMPAÑA, VALIDAMOS QUE LOS DATOS SEAN CONFIABLES. SIN ESTO, TODO LO DEMÁS ES RUIDO.</p>
-      </div>
-      <div style="padding:0 2rem;border-right:1px solid var(--c-border);">
-        <div class="font-supply" style="font-size:56px;font-weight:700;color:var(--c-blue);opacity:.7;line-height:1;margin-bottom:1rem;">02</div>
-        <h4 style="font-size:12px;font-weight:700;letter-spacing:.15em;margin-bottom:8px;">CAMPAIGN_STRUCTURE</h4>
-        <p style="font-size:11px;color:var(--c-text-muted);line-height:1.7;" data-es="ORGANIZAMOS KEYWORDS, AUDIENCIAS Y ANUNCIOS PARA QUE EL ALGORITMO ENTIENDA QUÉ OPTIMIZAR Y HACIA QUÉ OBJETIVO." data-en="WE ORGANIZE KEYWORDS, AUDIENCES AND ADS SO THE ALGORITHM UNDERSTANDS WHAT TO OPTIMIZE AND TOWARD WHICH GOAL.">ORGANIZAMOS KEYWORDS, AUDIENCIAS Y ANUNCIOS PARA QUE EL ALGORITMO ENTIENDA QUÉ OPTIMIZAR Y HACIA QUÉ OBJETIVO.</p>
-      </div>
-      <div style="padding:0 0 0 2rem;">
-        <div class="font-supply" style="font-size:56px;font-weight:700;color:var(--c-green);opacity:.7;line-height:1;margin-bottom:1rem;">03</div>
-        <h4 style="font-size:12px;font-weight:700;letter-spacing:.15em;margin-bottom:8px;">DATA_OPTIMIZATION</h4>
-        <p style="font-size:11px;color:var(--c-text-muted);line-height:1.7;" data-es="CON MEDICIÓN LIMPIA Y ESTRUCTURA CLARA, LAS DECISIONES DEJAN DE SER SUPOSICIONES Y SE CONVIERTEN EN ACCIONES." data-en="WITH CLEAN MEASUREMENT AND CLEAR STRUCTURE, DECISIONS STOP BEING GUESSES AND BECOME ACTIONS WITH IMPACT.">CON MEDICIÓN LIMPIA Y ESTRUCTURA CLARA, LAS DECISIONES DEJAN DE SER SUPOSICIONES Y SE CONVIERTEN EN ACCIONES.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════ PRICING ═══════════════════════════ -->
-<section id="precios" style="padding:4rem 2.5rem;border-top:1px solid var(--c-border);">
-  <div style="max-width:1200px;margin:0 auto;">
-    <div class="sec-pre">PRICING_MODULE</div>
-    <h2 class="font-supply" style="font-size:clamp(1.6rem,3vw,2.4rem);font-weight:700;margin-bottom:2.5rem;" data-es="TRANSPARENTE. SIN SORPRESAS." data-en="TRANSPARENT. NO SURPRISES.">TRANSPARENTE. SIN SORPRESAS.</h2>
-
-    <!-- TOP ROW -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
-      <!-- SETUP -->
-      <div class="price-card">
-        <div class="price-card-header">
-          <span style="font-size:10px;color:var(--c-text-muted);letter-spacing:.15em;">PLAN_SETUP</span>
-          <span style="font-size:9px;color:var(--c-green);letter-spacing:.15em;">● ONE_TIME</span>
-        </div>
-        <div style="padding:1.5rem;">
-          <div style="font-size:10px;color:var(--c-text-muted);letter-spacing:.15em;margin-bottom:2px;" data-es="A PARTIR DE" data-en="STARTING FROM">A PARTIR DE</div>
-          <div class="font-supply" style="font-size:36px;font-weight:700;margin-bottom:2px;"><span style="font-size:14px;color:var(--c-text-muted);">$</span>3,000</div>
-          <div style="font-size:10px;color:var(--c-text-muted);margin-bottom:1rem;" data-es="MXN · PAGO ÚNICO" data-en="MXN · ONE-TIME PAYMENT">MXN · PAGO ÚNICO</div>
-          <p style="font-size:11px;color:var(--c-text-muted);margin-bottom:1.2rem;line-height:1.7;" data-es="INFRAESTRUCTURA DE MEDICIÓN BASE PARA EMPEZAR A TRABAJAR CON DATOS CONFIABLES." data-en="BASE MEASUREMENT INFRASTRUCTURE TO START WORKING WITH RELIABLE DATA.">INFRAESTRUCTURA DE MEDICIÓN BASE PARA EMPEZAR A TRABAJAR CON DATOS CONFIABLES.</p>
-          <ul class="checklist">
-            <li data-es="SETUP GA4" data-en="GA4 SETUP">SETUP GA4</li>
-            <li data-es="CONFIGURACIÓN DE CONVERSIONES" data-en="CONVERSION CONFIGURATION">CONFIGURACIÓN DE CONVERSIONES</li>
-            <li data-es="TRACKING BÁSICO DE EVENTOS" data-en="BASIC EVENT TRACKING">TRACKING BÁSICO DE EVENTOS</li>
-          </ul>
-        </div>
-      </div>
-
-      <!-- RETAINER -->
-      <div class="price-card" style="border-color:var(--c-orange);">
-        <div class="price-card-header">
-          <span style="font-size:10px;color:var(--c-text-muted);letter-spacing:.15em;">PLAN_RETAINER</span>
-          <span style="font-size:9px;color:var(--c-orange);letter-spacing:.15em;">● CORE</span>
-        </div>
-        <div style="padding:1.5rem;">
-          <div style="font-size:10px;color:var(--c-text-muted);letter-spacing:.15em;margin-bottom:2px;" data-es="A PARTIR DE" data-en="STARTING FROM">A PARTIR DE</div>
-          <div class="font-supply" style="font-size:36px;font-weight:700;margin-bottom:2px;"><span style="font-size:14px;color:var(--c-text-muted);">$</span>7,000</div>
-          <div style="font-size:10px;color:var(--c-text-muted);margin-bottom:1rem;" data-es="MXN · POR CUENTA / MES" data-en="MXN · PER ACCOUNT / MONTH">MXN · POR CUENTA / MES</div>
-          <p style="font-size:11px;color:var(--c-text-muted);margin-bottom:1.2rem;line-height:1.7;" data-es="GESTIÓN ESTRATÉGICA CONTINUA DE PERFORMANCE, MEDICIÓN Y OPTIMIZACIÓN." data-en="ONGOING STRATEGIC MANAGEMENT OF PERFORMANCE, MEASUREMENT AND OPTIMIZATION.">GESTIÓN ESTRATÉGICA CONTINUA DE PERFORMANCE, MEDICIÓN Y OPTIMIZACIÓN.</p>
-          <ul class="checklist">
-            <li data-es="GOOGLE ADS MANAGEMENT" data-en="GOOGLE ADS MANAGEMENT">GOOGLE ADS MANAGEMENT</li>
-            <li data-es="ANÁLISIS DE PERFORMANCE" data-en="PERFORMANCE ANALYSIS">ANÁLISIS DE PERFORMANCE</li>
-            <li data-es="DASHBOARD LOOKER STUDIO" data-en="LOOKER STUDIO DASHBOARD">DASHBOARD LOOKER STUDIO</li>
-            <li data-es="REPORTES CON INSIGHTS" data-en="REPORTS WITH INSIGHTS">REPORTES CON INSIGHTS</li>
-            <li data-es="MEASUREMENT LAYER ACTIVA" data-en="ACTIVE MEASUREMENT LAYER">MEASUREMENT LAYER ACTIVA</li>
-          </ul>
-          <p style="font-size:10px;color:var(--c-text-muted);margin-top:1rem;padding-top:10px;border-top:1px solid var(--c-border);" data-es="PAGO POR ADELANTADO · CANCELACIÓN CON 8 DÍAS DE AVISO" data-en="PAYMENT UPFRONT · 8-DAY CANCELLATION NOTICE">PAGO POR ADELANTADO · CANCELACIÓN CON 8 DÍAS DE AVISO</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- BOTTOM ROW — centered -->
-    <div style="display:flex;justify-content:center;">
-      <div class="price-card" style="width:calc(50% - 6px);">
-        <div class="price-card-header">
-          <span style="font-size:10px;color:var(--c-text-muted);letter-spacing:.15em;">PLAN_AUDIT</span>
-          <span style="font-size:9px;color:var(--c-blue);letter-spacing:.15em;">● À_LA_CARTE</span>
-        </div>
-        <div style="padding:1.5rem;">
-          <div style="font-size:10px;color:var(--c-text-muted);letter-spacing:.15em;margin-bottom:2px;" data-es="A PARTIR DE" data-en="STARTING FROM">A PARTIR DE</div>
-          <div class="font-supply" style="font-size:26px;font-weight:700;margin-bottom:2px;padding-top:4px;">À LA CARTE</div>
-          <div style="font-size:10px;color:var(--c-text-muted);margin-bottom:1rem;" data-es="DIAGNÓSTICO PUNTUAL" data-en="POINT DIAGNOSIS">DIAGNÓSTICO PUNTUAL</div>
-          <p style="font-size:11px;color:var(--c-text-muted);margin-bottom:1.2rem;line-height:1.7;" data-es="PUNTO DE ENTRADA IDEAL PARA IDENTIFICAR EL ESTADO ACTUAL ANTES DE CUALQUIER COMPROMISO." data-en="IDEAL ENTRY POINT TO IDENTIFY THE CURRENT STATE BEFORE ANY COMMITMENT.">PUNTO DE ENTRADA IDEAL PARA IDENTIFICAR EL ESTADO ACTUAL ANTES DE CUALQUIER COMPROMISO.</p>
-          <ul class="checklist">
-            <li data-es="DIAGNÓSTICO DE TRÁFICO Y SITIO" data-en="TRAFFIC & SITE DIAGNOSIS">DIAGNÓSTICO DE TRÁFICO Y SITIO</li>
-            <li data-es="ANÁLISIS DE FUGAS Y FRICCIÓN" data-en="LEAK & FRICTION ANALYSIS">ANÁLISIS DE FUGAS Y FRICCIÓN</li>
-            <li data-es="QUICK WINS Y PRIORIDADES" data-en="QUICK WINS & PRIORITIES">QUICK WINS Y PRIORIDADES</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════ CTA + FORM ════════════════════════ -->
-<section id="contacto" style="padding:5rem 2.5rem;border-top:1px solid var(--c-border);background:var(--c-surf-mid);">
-  <div style="max-width:900px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start;" id="cta-grid">
-
-    <!-- LEFT: copy -->
-    <div>
-      <div style="font-size:10px;color:var(--c-orange);letter-spacing:.2em;margin-bottom:1.2rem;">> EXECUTE_NEXT_STEP</div>
-      <h2 class="font-supply" style="font-size:clamp(1.6rem,3vw,2.2rem);font-weight:700;margin-bottom:1rem;line-height:1.1;" data-es="¿INVIERTES EN ADS<br>SIN SABER QUÉ FUNCIONA?" data-en="INVESTING IN ADS<br>WITHOUT KNOWING WHAT WORKS?">¿INVIERTES EN ADS<br>SIN SABER QUÉ FUNCIONA?</h2>
-      <p style="font-size:12px;color:var(--c-text-sec);line-height:1.85;margin-bottom:2rem;" data-es="AGENDA UN DIAGNÓSTICO SIN COSTO. EN 30 MINUTOS IDENTIFICAMOS DÓNDE ESTÁ EL PROBLEMA Y CÓMO RESOLVERLO — CON DATOS, NO SUPOSICIONES." data-en="SCHEDULE A FREE DIAGNOSTIC. IN 30 MINUTES WE IDENTIFY WHERE THE PROBLEM IS AND HOW TO SOLVE IT — WITH DATA, NOT GUESSWORK.">AGENDA UN DIAGNÓSTICO SIN COSTO. EN 30 MINUTOS IDENTIFICAMOS DÓNDE ESTÁ EL PROBLEMA Y CÓMO RESOLVERLO — CON DATOS, NO SUPOSICIONES.</p>
-
-      <!-- Trust signals -->
-      <div style="display:flex;flex-direction:column;gap:10px;">
-        <div style="display:flex;align-items:center;gap:10px;font-size:11px;color:var(--c-text-muted);">
-          <span style="color:var(--c-green);font-size:14px;">✓</span>
-          <span data-es="SIN COMPROMISO NI CONTRATO" data-en="NO COMMITMENT OR CONTRACT">SIN COMPROMISO NI CONTRATO</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:10px;font-size:11px;color:var(--c-text-muted);">
-          <span style="color:var(--c-green);font-size:14px;">✓</span>
-          <span data-es="RESPUESTA EN MENOS DE 24 HRS" data-en="RESPONSE IN LESS THAN 24 HRS">RESPUESTA EN MENOS DE 24 HRS</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:10px;font-size:11px;color:var(--c-text-muted);">
-          <span style="color:var(--c-green);font-size:14px;">✓</span>
-          <span data-es="DIAGNÓSTICO BASADO EN TUS DATOS REALES" data-en="DIAGNOSIS BASED ON YOUR REAL DATA">DIAGNÓSTICO BASADO EN TUS DATOS REALES</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- RIGHT: form -->
-    <div style="background:var(--c-surf-low);border:1px solid var(--c-border);border-radius:8px;overflow:hidden;">
-      <div style="background:var(--c-surf-mid);padding:10px 16px;border-bottom:1px solid var(--c-border);display:flex;justify-content:space-between;align-items:center;">
-        <span style="font-size:10px;color:var(--c-text-muted);letter-spacing:.15em;">INIT_CONTACT_FORM</span>
-        <span style="display:flex;align-items:center;gap:5px;font-size:10px;color:var(--c-green);">
-          <span class="pulse" style="width:5px;height:5px;border-radius:50%;background:var(--c-green);display:inline-block;"></span>
-          SECURE
-        </span>
-      </div>
-
-      <!-- SUCCESS STATE (hidden by default) -->
-      <div id="form-success" style="display:none;padding:2.5rem;text-align:center;">
-        <div style="font-size:32px;margin-bottom:1rem;">🔥</div>
-        <div class="font-supply" style="font-size:18px;font-weight:700;color:var(--c-orange);margin-bottom:.6rem;" data-es="MENSAJE_ENVIADO" data-en="MESSAGE_SENT">MENSAJE_ENVIADO</div>
-        <p style="font-size:11px;color:var(--c-text-muted);line-height:1.7;" data-es="RECIBIMOS TU DIAGNÓSTICO. TE CONTACTAMOS EN MENOS DE 24 HRS." data-en="WE RECEIVED YOUR REQUEST. WE'LL CONTACT YOU WITHIN 24 HRS.">RECIBIMOS TU DIAGNÓSTICO. TE CONTACTAMOS EN MENOS DE 24 HRS.</p>
-      </div>
-
-      <!-- FORM -->
-      <form id="contact-form" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" style="padding:1.5rem;display:flex;flex-direction:column;gap:14px;">
-        <input type="hidden" name="form-name" value="contact" />
-        <input type="text" name="bot-field" style="display:none;" />
-
-        <div>
-          <label style="font-size:10px;color:var(--c-text-muted);letter-spacing:.15em;display:block;margin-bottom:6px;" data-es="NOMBRE" data-en="NAME">NOMBRE</label>
-          <input type="text" name="nombre" required placeholder="Tu nombre"
-            style="width:100%;background:var(--c-surf-high);border:1px solid var(--c-border);border-radius:4px;padding:10px 12px;color:var(--c-text);font-family:'Cordia New','Space Grotesk',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;outline:none;transition:border-color .2s;"
-            onfocus="this.style.borderColor='var(--c-orange)'" onblur="this.style.borderColor='var(--c-border)'" />
-        </div>
-
-        <div>
-          <label style="font-size:10px;color:var(--c-text-muted);letter-spacing:.15em;display:block;margin-bottom:6px;" data-es="CORREO" data-en="EMAIL">CORREO</label>
-          <input type="email" name="correo" required placeholder="tu@empresa.com"
-            style="width:100%;background:var(--c-surf-high);border:1px solid var(--c-border);border-radius:4px;padding:10px 12px;color:var(--c-text);font-family:'Cordia New','Space Grotesk',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;outline:none;transition:border-color .2s;"
-            onfocus="this.style.borderColor='var(--c-orange)'" onblur="this.style.borderColor='var(--c-border)'" />
-        </div>
-
-        <div>
-          <label style="font-size:10px;color:var(--c-text-muted);letter-spacing:.15em;display:block;margin-bottom:6px;" data-es="EMPRESA / SITIO WEB" data-en="COMPANY / WEBSITE">EMPRESA / SITIO WEB</label>
-          <input type="text" name="empresa" placeholder="empresa.com"
-            style="width:100%;background:var(--c-surf-high);border:1px solid var(--c-border);border-radius:4px;padding:10px 12px;color:var(--c-text);font-family:'Cordia New','Space Grotesk',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;outline:none;transition:border-color .2s;"
-            onfocus="this.style.borderColor='var(--c-orange)'" onblur="this.style.borderColor='var(--c-border)'" />
-        </div>
-
-        <div>
-          <label style="font-size:10px;color:var(--c-text-muted);letter-spacing:.15em;display:block;margin-bottom:6px;" data-es="¿CUÁL ES TU PROBLEMA PRINCIPAL?" data-en="WHAT IS YOUR MAIN PROBLEM?">¿CUÁL ES TU PROBLEMA PRINCIPAL?</label>
-          <select name="problema"
-            style="width:100%;background:var(--c-surf-high);border:1px solid var(--c-border);border-radius:4px;padding:10px 12px;color:var(--c-text);font-family:'Cordia New','Space Grotesk',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;outline:none;cursor:pointer;transition:border-color .2s;appearance:none;"
-            onfocus="this.style.borderColor='var(--c-orange)'" onblur="this.style.borderColor='var(--c-border)'">
-            <option value="" data-es="SELECCIONA UNA OPCIÓN" data-en="SELECT AN OPTION">SELECCIONA UNA OPCIÓN</option>
-            <option value="medicion" data-es="NO CONFÍO EN MIS DATOS / GA4" data-en="I DON'T TRUST MY DATA / GA4">NO CONFÍO EN MIS DATOS / GA4</option>
-            <option value="campanas" data-es="MIS CAMPAÑAS NO GENERAN LEADS" data-en="MY CAMPAIGNS DON'T GENERATE LEADS">MIS CAMPAÑAS NO GENERAN LEADS</option>
-            <option value="estructura" data-es="NO SÉ QUÉ ESTÁ FUNCIONANDO" data-en="I DON'T KNOW WHAT'S WORKING">NO SÉ QUÉ ESTÁ FUNCIONANDO</option>
-            <option value="auditoria" data-es="QUIERO UNA AUDITORÍA COMPLETA" data-en="I WANT A FULL AUDIT">QUIERO UNA AUDITORÍA COMPLETA</option>
-          </select>
-        </div>
-
-        <button type="submit" class="btn-primary" style="width:100%;justify-content:center;padding:13px;font-size:11px;margin-top:4px;" data-es="EXECUTE_DIAGNÓSTICO →" data-en="EXECUTE_DIAGNOSTIC →">
-          EXECUTE_DIAGNÓSTICO →
-        </button>
-
-        <p style="font-size:10px;color:var(--c-text-muted);text-align:center;letter-spacing:.1em;" data-es="TUS DATOS NO SE COMPARTEN CON TERCEROS" data-en="YOUR DATA IS NOT SHARED WITH THIRD PARTIES">TUS DATOS NO SE COMPARTEN CON TERCEROS</p>
-      </form>
-    </div>
-  </div>
-</section>
-
-</main>
-
-<!-- ═══════════════════════════════ FOOTER ════════════════════════════ -->
-<footer style="background:var(--c-surf-mid);padding:1.4rem 2.5rem;display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--c-border);flex-wrap:wrap;gap:8px;">
-  <div style="display:flex;align-items:center;gap:8px;">
-    <div style="width:24px;height:24px;border-radius:6px;background:linear-gradient(135deg,#FF4500,#c43300);display:flex;align-items:center;justify-content:center;font-size:11px;">🔥</div>
-    <div class="font-supply" style="font-size:14px;font-weight:700;">IGNITIA</div>
-  </div>
-  <div style="display:flex;gap:2rem;">
-    <a href="#" style="font-size:10px;color:var(--c-text-muted);text-decoration:none;" onmouseover="this.style.color='var(--c-orange)'" onmouseout="this.style.color='var(--c-text-muted)'">TERMS_OF_SERVICE</a>
-    <a href="#" style="font-size:10px;color:var(--c-text-muted);text-decoration:none;" onmouseover="this.style.color='var(--c-orange)'" onmouseout="this.style.color='var(--c-text-muted)'">PRIVACY_POLICY</a>
-    <a href="#" style="font-size:10px;color:var(--c-text-muted);text-decoration:none;display:flex;align-items:center;gap:5px;" onmouseover="this.style.color='var(--c-orange)'" onmouseout="this.style.color='var(--c-text-muted)'">
-      <span class="pulse" style="width:5px;height:5px;border-radius:50%;background:var(--c-green);display:inline-block;"></span>SYSTEM_STATUS
-    </a>
-  </div>
-  <p style="font-size:10px;color:var(--c-text-muted);" data-es="COPYRIGHT_2026_IGNITIA_PERFORMANCE_CONSULTING" data-en="COPYRIGHT_2026_IGNITIA_PERFORMANCE_CONSULTING">COPYRIGHT_2026_IGNITIA_PERFORMANCE_CONSULTING</p>
-</footer>
-
-<!-- ═══════════════════════ LANG ENGINE ═══════════════════════════════ -->
-<script>
-  let currentLang = 'es';
-
-  function toggleLang() {
-    currentLang = currentLang === 'es' ? 'en' : 'es';
-    applyLang(currentLang);
-    const btn = document.getElementById('langToggle');
-    btn.textContent = currentLang === 'es' ? 'EN' : 'ES';
   }
 
-  function applyLang(lang) {
-    document.querySelectorAll('[data-es][data-en]').forEach(el => {
-      const val = el.getAttribute('data-' + lang);
-      if (!val) return;
-      const icon = el.querySelector('.material-symbols-outlined');
-      if (icon) {
-        el.childNodes.forEach(n => { if (n.nodeType === 3) n.textContent = ' '; });
-        el.firstChild.textContent = val + ' ';
-      } else if (val.includes('<br>')) {
-        el.innerHTML = val;
-      } else {
-        el.textContent = val;
-      }
-    });
-    document.documentElement.lang = lang;
+  rateLimitStore.set(ip, now);
+
+  // Cleanup old entries every 100 requests
+  if (rateLimitStore.size > 100) {
+    for (const [key, val] of rateLimitStore.entries()) {
+      if (now - val > windowMs) rateLimitStore.delete(key);
+    }
   }
 
-  // ─── NETLIFY FORM — AJAX SUBMIT ───────────────────────────────────────
-  const form = document.getElementById('contact-form');
-  const success = document.getElementById('form-success');
+  return { limited: false };
+}
 
-  if (form) {
-    form.addEventListener('submit', function(e) {
-      e.preventDefault();
-      const btn = form.querySelector('button[type="submit"]');
-      btn.textContent = 'SENDING...';
-      btn.disabled = true;
+exports.handler = async (event) => {
+  // CORS headers
+  const headers = {
+    'Access-Control-Allow-Origin': 'https://getignitia.com',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Content-Type': 'application/json'
+  };
 
-      fetch('/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams(new FormData(form)).toString()
+  // Handle preflight
+  if (event.httpMethod === 'OPTIONS') {
+    return { statusCode: 200, headers, body: '' };
+  }
+
+  if (event.httpMethod !== 'POST') {
+    return { statusCode: 405, headers, body: JSON.stringify({ error: 'Method not allowed' }) };
+  }
+
+  // Get client IP
+  const ip = event.headers['x-forwarded-for']?.split(',')[0]?.trim()
+    || event.headers['client-ip']
+    || 'unknown';
+
+  // Check rate limit
+  const rateCheck = isRateLimited(ip);
+  if (rateCheck.limited) {
+    return {
+      statusCode: 429,
+      headers,
+      body: JSON.stringify({
+        error: 'rate_limited',
+        hoursLeft: rateCheck.hoursLeft,
+        message: `Ya usaste tu diagnóstico gratuito. Disponible en ${rateCheck.hoursLeft} hrs.`
       })
-      .then(() => {
-        form.style.display = 'none';
-        success.style.display = 'block';
+    };
+  }
+
+  // Parse body
+  let body;
+  try {
+    body = JSON.parse(event.body);
+  } catch {
+    return { statusCode: 400, headers, body: JSON.stringify({ error: 'Invalid JSON' }) };
+  }
+
+  const { name, url } = body;
+  if (!name || !url) {
+    return { statusCode: 400, headers, body: JSON.stringify({ error: 'Missing name or url' }) };
+  }
+
+  // Validate URL format
+  try { new URL(url); } catch {
+    return { statusCode: 400, headers, body: JSON.stringify({ error: 'Invalid URL format' }) };
+  }
+
+  // Call Anthropic API
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) {
+    return { statusCode: 500, headers, body: JSON.stringify({ error: 'API key not configured' }) };
+  }
+
+  const prompt = `Eres un auditor experto de presencia digital para negocios en Latinoamérica.
+
+Analiza el negocio "${name}" con sitio web "${url}".
+
+Busca información real sobre este negocio en internet. Evalúa:
+- Calidad técnica y contenido del sitio web
+- Presencia y reseñas en Google Maps
+- Redes sociales activas y engagement
+- Posicionamiento SEO básico
+- Velocidad y experiencia móvil
+
+Responde ÚNICAMENTE con JSON válido sin texto adicional ni backticks markdown:
+
+{
+  "score": <número entero del 1 al 10, donde 10 es máxima fricción y problemas>,
+  "problems": [
+    {
+      "title": "<TÍTULO CORTO EN MAYÚSCULAS, MÁXIMO 5 PALABRAS>",
+      "description": "<DESCRIPCIÓN DEL PROBLEMA EN 1-2 ORACIONES EN MAYÚSCULAS. NO MENCIONES SOLUCIONES.>",
+      "severity": "<HIGH o MEDIUM>"
+    },
+    {
+      "title": "<TÍTULO DEL SEGUNDO PROBLEMA>",
+      "description": "<DESCRIPCIÓN DEL SEGUNDO PROBLEMA SIN SOLUCIÓN.>",
+      "severity": "<HIGH o MEDIUM>"
+    }
+  ]
+}
+
+Reglas críticas:
+- Los problemas deben ser REALES y ESPECÍFICOS para este negocio
+- NUNCA menciones cómo resolver los problemas
+- Todo texto en ESPAÑOL y MAYÚSCULAS
+- Sé directo y específico, no genérico
+- Si el sitio no carga o no existe, score 9-10 y problemas de accesibilidad`;
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01'
+      },
+      body: JSON.stringify({
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 1000,
+        tools: [{ type: 'web_search_20250305', name: 'web_search' }],
+        messages: [{ role: 'user', content: prompt }]
       })
-      .catch(() => {
-        btn.textContent = 'ERROR — RETRY';
-        btn.disabled = false;
-      });
     });
-  }
-</script>
 
-<!-- MOBILE RESPONSIVE -->
-<style>
-  @media (max-width: 900px) {
-    section > div { padding-left: 1.5rem !important; padding-right: 1.5rem !important; }
-  }
-  @media (max-width: 768px) {
-    header { padding: 1rem 1.5rem !important; }
-    section { padding-left: 1.5rem !important; padding-right: 1.5rem !important; }
-    [style*="grid-template-columns:1.2fr 1fr"] { grid-template-columns: 1fr !important; }
-    [style*="grid-template-columns:repeat(4,1fr)"] { grid-template-columns: repeat(2,1fr) !important; }
-    [style*="grid-template-columns:repeat(3,1fr)"] { grid-template-columns: 1fr !important; }
-    [style*="grid-template-columns:1fr 1fr"] { grid-template-columns: 1fr !important; }
-    [style*="width:calc(50% - 6px)"] { width: 100% !important; }
-    [style*="grid-column:span 2"] { grid-column: span 1 !important; }
-    .hidden { display: none !important; }
-    [style*="padding:0 2rem 0 0;border-right"] { padding: 0 0 1.5rem !important; border-right: none !important; border-bottom: 1px solid var(--c-border); margin-bottom: 1.5rem; }
-    [style*="padding:0 2rem;border-right"] { padding: 0 0 1.5rem !important; border-right: none !important; border-bottom: 1px solid var(--c-border); margin-bottom: 1.5rem; }
-    [style*="padding:0 0 0 2rem"] { padding: 0 !important; }
-    [style*="font-size:clamp(2.2rem"] { font-size: 2rem !important; }
-    #cta-grid { grid-template-columns: 1fr !important; gap: 2rem !important; }
-  }
-</style>
+    if (!response.ok) {
+      const err = await response.json();
+      console.error('Anthropic error:', err);
+      return { statusCode: 502, headers, body: JSON.stringify({ error: 'API error', detail: err }) };
+    }
 
-</body>
-</html>
+    const data = await response.json();
+
+    // Extract text blocks only
+    let text = '';
+    for (const block of data.content) {
+      if (block.type === 'text') text += block.text;
+    }
+
+    // Parse JSON from response
+    const jsonMatch = text.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) {
+      console.error('No JSON in response:', text);
+      return { statusCode: 502, headers, body: JSON.stringify({ error: 'Invalid response format' }) };
+    }
+
+    const result = JSON.parse(jsonMatch[0]);
+
+    // Validate structure
+    if (!result.score || !result.problems || result.problems.length < 2) {
+      return { statusCode: 502, headers, body: JSON.stringify({ error: 'Incomplete response' }) };
+    }
+
+    return {
+      statusCode: 200,
+      headers,
+      body: JSON.stringify(result)
+    };
+
+  } catch (err) {
+    console.error('Function error:', err);
+    return {
+      statusCode: 500,
+      headers,
+      body: JSON.stringify({ error: 'Internal error', detail: err.message })
+    };
+  }
+};
