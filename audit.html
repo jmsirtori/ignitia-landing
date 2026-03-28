@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ignitia · Diagnóstico Digital Gratuito</title>
+  <meta name="description" content="Descubre los principales problemas digitales de tu negocio en segundos. Diagnóstico gratuito impulsado por IA." />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://getignitia.com/audit" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23FF4500'/><text y='.9em' font-size='80'>🔥</text></svg>" />
+
+  <style>
+    @font-face { font-family: 'Supply'; src: url('https://fonts.cdnfonts.com/s/77402/Supply-Regular.woff') format('woff'); }
+    @font-face { font-family: 'Cordia New'; src: url('https://fonts.cdnfonts.com/s/15444/CordiaNew.woff') format('woff'); }
+
+    :root {
+      --c-orange:     #FF4500;
+      --c-orange-h:   #FF6A33;
+      --c-orange-d:   #c43300;
+      --c-bg:         #060a10;
+      --c-surf-low:   #171c22;
+      --c-surf-mid:   #0f141a;
+      --c-surf-high:  #31353c;
+      --c-border:     #21262d;
+      --c-text:       #e6edf3;
+      --c-text-sec:   #c9d1d9;
+      --c-text-muted: #484f58;
+      --c-green:      #3fb950;
+      --c-yellow:     #d29922;
+      --c-red:        #E24B4A;
+      --c-blue:       #a2c9ff;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--c-bg);
+      color: var(--c-text);
+      font-family: 'Cordia New', monospace;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    .font-supply { font-family: 'Supply', sans-serif; letter-spacing: -0.02em; }
+
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+    .pulse { animation: pulse 2s infinite; }
+
+    @keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+    .fade-up { animation: fadeUp 0.5s ease forwards; }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spin { animation: spin 1s linear infinite; }
+
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+    .blink { animation: blink 1s step-end infinite; }
+
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--c-bg); }
+    ::-webkit-scrollbar-thumb { background: var(--c-surf-high); border-radius: 2px; }
+
+    /* ── NAV ─────────────────────────────────────────────────────── */
+    .nav {
+      position: sticky; top: 0; z-index: 20;
+      background: var(--c-surf-mid);
+      border-bottom: 1px solid var(--c-border);
+      padding: .9rem 2.5rem;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .logo-icon {
+      width: 30px; height: 30px; border-radius: 7px;
+      background: linear-gradient(135deg, #FF4500, #c43300);
+      display: flex; align-items: center; justify-content: center; font-size: 14px;
+    }
+    .logo-name { font-family: 'Supply', sans-serif; font-size: 15px; font-weight: 700; color: var(--c-text); }
+    .logo-tag { font-size: 9px; color: var(--c-text-muted); letter-spacing: .2em; }
+    .nav-right { display: flex; align-items: center; gap: 10px; font-size: 10px; color: var(--c-green); }
+    .nav-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--c-green); }
+
+    /* ── HERO ────────────────────────────────────────────────────── */
+    .hero {
+      max-width: 760px; margin: 0 auto;
+      padding: 4rem 2rem 3rem;
+      text-align: center;
+    }
+    .hero-pre {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 10px; color: var(--c-orange); letter-spacing: .2em;
+      padding: 4px 14px; background: rgba(255,69,0,.08);
+      border: 1px solid rgba(255,69,0,.2); border-radius: 2px;
+      margin-bottom: 1.4rem;
+    }
+    .hero h1 {
+      font-family: 'Supply', sans-serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 700; line-height: 1.1;
+      margin-bottom: 1rem;
+    }
+    .hero h1 span { color: var(--c-orange); }
+    .hero p { font-size: 12px; color: var(--c-text-sec); line-height: 1.85; margin-bottom: 2.5rem; max-width: 520px; margin-left: auto; margin-right: auto; }
+
+    /* ── INPUT FORM ──────────────────────────────────────────────── */
+    .audit-form {
+      background: var(--c-surf-low);
+      border: 1px solid var(--c-border);
+      border-radius: 10px; overflow: hidden;
+      max-width: 600px; margin: 0 auto;
+    }
+    .form-header {
+      background: var(--c-surf-mid);
+      padding: 10px 16px; border-bottom: 1px solid var(--c-border);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .form-header span { font-size: 10px; color: var(--c-text-muted); letter-spacing: .15em; }
+    .form-body { padding: 1.5rem; display: flex; flex-direction: column; gap: 14px; }
+    .field label { font-size: 10px; color: var(--c-text-muted); letter-spacing: .15em; display: block; margin-bottom: 6px; }
+    .field input {
+      width: 100%; background: var(--c-surf-high);
+      border: 1px solid var(--c-border); border-radius: 4px;
+      padding: 11px 14px; color: var(--c-text);
+      font-family: 'Cordia New', monospace; font-size: 12px;
+      letter-spacing: .1em; text-transform: uppercase; outline: none;
+      transition: border-color .2s;
+    }
+    .field input:focus { border-color: var(--c-orange); }
+    .field input::placeholder { color: var(--c-text-muted); }
+    .btn-run {
+      width: 100%; padding: 14px; background: var(--c-orange); color: #fff;
+      border: none; border-radius: 4px; font-size: 12px; font-weight: 700;
+      cursor: pointer; font-family: 'Cordia New', monospace;
+      letter-spacing: .15em; text-transform: uppercase;
+      transition: background .2s; display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .btn-run:hover { background: var(--c-orange-h); }
+    .btn-run:disabled { opacity: .6; cursor: not-allowed; }
+
+    /* ── LOADING ─────────────────────────────────────────────────── */
+    .loading-wrap {
+      display: none; max-width: 600px; margin: 2rem auto;
+      background: var(--c-surf-low); border: 1px solid var(--c-border);
+      border-radius: 10px; overflow: hidden;
+    }
+    .loading-header {
+      background: var(--c-surf-mid); padding: 10px 16px;
+      border-bottom: 1px solid var(--c-border);
+      display: flex; justify-content: space-between;
+    }
+    .loading-header span { font-size: 10px; color: var(--c-orange); letter-spacing: .15em; }
+    .loading-body { padding: 1.5rem; }
+    .loading-step {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 11px; color: var(--c-text-muted); padding: 6px 0;
+      border-bottom: 1px solid var(--c-border);
+    }
+    .loading-step:last-child { border-bottom: none; }
+    .step-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--c-surf-high); flex-shrink: 0;
+      transition: background .3s;
+    }
+    .step-dot.active { background: var(--c-orange); }
+    .step-dot.done   { background: var(--c-green); }
+
+    /* ── RESULTS ─────────────────────────────────────────────────── */
+    .results-wrap {
+      display: none; max-width: 700px; margin: 2rem auto 4rem;
+    }
+    .results-header {
+      background: var(--c-surf-low); border: 1px solid var(--c-border);
+      border-radius: 10px 10px 0 0; overflow: hidden;
+    }
+    .rh-top {
+      background: var(--c-surf-mid); padding: 10px 16px;
+      border-bottom: 1px solid var(--c-border);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .rh-top span { font-size: 10px; color: var(--c-text-muted); letter-spacing: .15em; }
+    .rh-body { padding: 1.4rem 1.6rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+    .biz-name { font-family: 'Supply', sans-serif; font-size: 18px; font-weight: 700; }
+    .biz-url  { font-size: 10px; color: var(--c-text-muted); margin-top: 3px; }
+    .score-display { text-align: center; }
+    .score-num { font-family: 'Supply', sans-serif; font-size: 48px; font-weight: 700; line-height: 1; }
+    .score-label { font-size: 9px; color: var(--c-text-muted); letter-spacing: .15em; margin-top: 4px; }
+
+    /* Problem cards */
+    .problems-section { margin-top: 1px; }
+    .problems-title {
+      background: var(--c-surf-mid); padding: 10px 16px;
+      border-left: 1px solid var(--c-border); border-right: 1px solid var(--c-border);
+      font-size: 10px; color: var(--c-text-muted); letter-spacing: .15em;
+      display: flex; justify-content: space-between;
+    }
+    .problem-card {
+      background: var(--c-surf-low);
+      border: 1px solid var(--c-border); border-top: none;
+      padding: 1.4rem 1.6rem;
+    }
+    .problem-card:last-of-type { border-radius: 0 0 10px 10px; }
+    .problem-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; margin-bottom: .8rem; }
+    .problem-num { font-family: 'Supply', sans-serif; font-size: 28px; font-weight: 700; color: var(--c-surf-high); line-height: 1; flex-shrink: 0; }
+    .problem-title { font-size: 14px; font-weight: 700; color: var(--c-text); margin-bottom: 6px; }
+    .problem-desc { font-size: 11px; color: var(--c-text-sec); line-height: 1.7; }
+    .severity-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 10px; font-weight: 700; padding: 3px 10px;
+      border-radius: 20px; letter-spacing: .1em; flex-shrink: 0;
+    }
+    .severity-badge::before { content: ""; width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+    .sev-high   { background: rgba(226,75,74,.12); color: var(--c-red);    border: 1px solid rgba(226,75,74,.3); }
+    .sev-high::before   { background: var(--c-red); }
+    .sev-med    { background: rgba(210,153,34,.12); color: var(--c-yellow); border: 1px solid rgba(210,153,34,.3); }
+    .sev-med::before    { background: var(--c-yellow); }
+    .problem-locked {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 11px; color: var(--c-text-muted);
+      padding: 8px 12px; background: var(--c-surf-high);
+      border-radius: 4px; margin-top: .8rem;
+    }
+
+    /* ── CTA UNLOCK ──────────────────────────────────────────────── */
+    .unlock-bar {
+      display: none; max-width: 700px; margin: 0 auto 4rem;
+      background: var(--c-orange);
+      border-radius: 0 0 10px 10px;
+      padding: 1.4rem 1.6rem;
+      display: none; flex-direction: column; gap: 1rem;
+    }
+    .unlock-bar h3 { font-family: 'Supply', sans-serif; font-size: 18px; font-weight: 700; color: #fff; }
+    .unlock-bar p  { font-size: 11px; color: rgba(255,255,255,.8); line-height: 1.7; }
+    .unlock-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .btn-unlock {
+      background: #fff; color: var(--c-orange);
+      border: none; padding: 12px 24px; border-radius: 4px;
+      font-size: 11px; font-weight: 700; cursor: pointer;
+      font-family: 'Cordia New', monospace; letter-spacing: .15em;
+      text-transform: uppercase; transition: opacity .2s;
+    }
+    .btn-unlock:hover { opacity: .9; }
+    .btn-unlock-ghost {
+      background: transparent; color: #fff;
+      border: 1.5px solid rgba(255,255,255,.5);
+      padding: 12px 24px; border-radius: 4px;
+      font-size: 11px; font-weight: 700; cursor: pointer;
+      font-family: 'Cordia New', monospace; letter-spacing: .15em;
+      text-transform: uppercase; transition: background .2s;
+      text-decoration: none; display: inline-flex; align-items: center;
+    }
+    .btn-unlock-ghost:hover { background: rgba(255,255,255,.1); }
+
+    /* ── MODAL ───────────────────────────────────────────────────── */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0; z-index: 100;
+      background: rgba(6,10,16,.92);
+      align-items: center; justify-content: center; padding: 1rem;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--c-surf-low); border: 1px solid var(--c-border);
+      border-radius: 10px; overflow: hidden;
+      width: 100%; max-width: 480px;
+      animation: fadeUp .3s ease;
+    }
+    .modal-header {
+      background: var(--c-surf-mid); padding: 12px 16px;
+      border-bottom: 1px solid var(--c-border);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .modal-header span { font-size: 10px; color: var(--c-text-muted); letter-spacing: .15em; }
+    .modal-close {
+      background: none; border: none; color: var(--c-text-muted);
+      cursor: pointer; font-size: 18px; line-height: 1; padding: 0 4px;
+    }
+    .modal-body { padding: 1.5rem; }
+    .modal-body h3 { font-family: 'Supply', sans-serif; font-size: 18px; font-weight: 700; margin-bottom: .5rem; }
+    .modal-body p  { font-size: 11px; color: var(--c-text-muted); line-height: 1.7; margin-bottom: 1.4rem; }
+    .modal-field label { font-size: 10px; color: var(--c-text-muted); letter-spacing: .15em; display: block; margin-bottom: 5px; }
+    .modal-field input {
+      width: 100%; background: var(--c-surf-high);
+      border: 1px solid var(--c-border); border-radius: 4px;
+      padding: 10px 12px; color: var(--c-text);
+      font-family: 'Cordia New', monospace; font-size: 11px;
+      letter-spacing: .1em; text-transform: uppercase; outline: none;
+      transition: border-color .2s; margin-bottom: 12px;
+    }
+    .modal-field input:focus { border-color: var(--c-orange); }
+    .modal-divider { border: none; border-top: 1px solid var(--c-border); margin: 1.2rem 0; }
+    .modal-calendly-label { font-size: 10px; color: var(--c-text-muted); letter-spacing: .15em; margin-bottom: .8rem; display: block; }
+    .btn-modal-submit {
+      width: 100%; padding: 13px; background: var(--c-orange); color: #fff;
+      border: none; border-radius: 4px; font-size: 11px; font-weight: 700;
+      cursor: pointer; font-family: 'Cordia New', monospace;
+      letter-spacing: .15em; text-transform: uppercase;
+      transition: background .2s; margin-bottom: 10px;
+    }
+    .btn-modal-submit:hover { background: var(--c-orange-h); }
+    .btn-calendly {
+      width: 100%; padding: 13px; background: transparent; color: var(--c-text-sec);
+      border: 1px solid var(--c-border); border-radius: 4px; font-size: 11px; font-weight: 700;
+      cursor: pointer; font-family: 'Cordia New', monospace;
+      letter-spacing: .15em; text-transform: uppercase;
+      transition: border-color .2s, color .2s; text-decoration: none;
+      display: block; text-align: center;
+    }
+    .btn-calendly:hover { border-color: var(--c-orange); color: var(--c-orange); }
+    .modal-success { display: none; padding: 2rem; text-align: center; }
+    .modal-success-icon { font-size: 36px; margin-bottom: 1rem; }
+    .modal-success h3 { font-family: 'Supply', sans-serif; font-size: 18px; font-weight: 700; color: var(--c-green); margin-bottom: .5rem; }
+    .modal-success p  { font-size: 11px; color: var(--c-text-muted); line-height: 1.7; }
+
+    /* ── FOOTER ──────────────────────────────────────────────────── */
+    .footer {
+      background: var(--c-surf-mid); padding: 1.2rem 2.5rem;
+      display: flex; justify-content: space-between; align-items: center;
+      border-top: 1px solid var(--c-border); flex-wrap: wrap; gap: 8px;
+    }
+    .footer-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; }
+    .footer-logo-icon {
+      width: 22px; height: 22px; border-radius: 5px;
+      background: linear-gradient(135deg, #FF4500, #c43300);
+      display: flex; align-items: center; justify-content: center; font-size: 10px;
+    }
+    .footer p { font-size: 10px; color: var(--c-text-muted); }
+
+    @media (max-width: 600px) {
+      .nav { padding: .9rem 1.2rem; }
+      .hero { padding: 3rem 1.2rem 2rem; }
+      .audit-form, .loading-wrap, .results-wrap, .unlock-bar { margin-left: 1rem; margin-right: 1rem; }
+      .rh-body { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <a class="logo" href="/">
+      <div class="logo-icon">🔥</div>
+      <div>
+        <div class="logo-name">IGNITIA</div>
+        <div class="logo-tag">DATA-DRIVEN. RESULTS-FOCUSED.</div>
+      </div>
+    </a>
+    <div class="nav-right">
+      <div class="nav-dot pulse"></div>
+      AUDIT_ENGINE_ONLINE
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-pre">// DIAGNOSTICO_DIGITAL_GRATUITO</div>
+    <h1 class="font-supply">¿Cuántos problemas<br>tiene tu sitio <span>ahora mismo?</span></h1>
+    <p>Ingresa el nombre y URL de tu negocio. Nuestra IA analiza tu presencia digital en segundos y te muestra los problemas más críticos que están costándote clientes.</p>
+  </section>
+
+  <!-- INPUT FORM -->
+  <div class="audit-form fade-up" id="audit-form">
+    <div class="form-header">
+      <span>INIT_AUDIT_SCAN</span>
+      <span style="color:var(--c-green);">● FREE</span>
+    </div>
+    <div class="form-body">
+      <div class="field">
+        <label>Nombre del negocio</label>
+        <input type="text" id="biz-name" placeholder="Ej. Tacos El Güero" />
+      </div>
+      <div class="field">
+        <label>URL del sitio web</label>
+        <input type="url" id="biz-url" placeholder="https://tuempresa.com" />
+      </div>
+      <button class="btn-run" id="run-btn" onclick="runAudit()">
+        <span id="btn-text">EJECUTAR_DIAGNÓSTICO →</span>
+      </button>
+      <p style="font-size:10px;color:var(--c-text-muted);text-align:center;">Sin registro. Sin tarjeta. Sin compromiso.</p>
+
+      <!-- Rate limit message -->
+      <div id="rate-limit-msg" style="display:none;background:rgba(226,75,74,.08);border:1px solid rgba(226,75,74,.3);border-radius:4px;padding:12px 14px;text-align:center;">
+        <p style="font-size:11px;color:var(--c-red);margin-bottom:8px;">Ya usaste tu diagnóstico gratuito hoy. Disponible en <span id="hours-left">24</span> hrs.</p>
+        <a href="https://calendly.com/juansirtori/30min" target="_blank" style="font-size:11px;color:var(--c-orange);text-decoration:none;letter-spacing:.1em;">AGENDAR SESIÓN DIRECTAMENTE →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOADING -->
+  <div class="loading-wrap" id="loading-wrap">
+    <div class="loading-header">
+      <span id="loading-title">SCANNING_DIGITAL_PRESENCE...</span>
+      <span style="color:var(--c-text-muted);font-size:10px;" id="loading-pct">0%</span>
+    </div>
+    <div class="loading-body">
+      <div class="loading-step" id="step-1">
+        <div class="step-dot" id="dot-1"></div>
+        <span>Analizando sitio web y estructura técnica</span>
+      </div>
+      <div class="loading-step" id="step-2">
+        <div class="step-dot" id="dot-2"></div>
+        <span>Revisando presencia en Google y Maps</span>
+      </div>
+      <div class="loading-step" id="step-3">
+        <div class="step-dot" id="dot-3"></div>
+        <span>Evaluando redes sociales y contenido</span>
+      </div>
+      <div class="loading-step" id="step-4">
+        <div class="step-dot" id="dot-4"></div>
+        <span>Calculando score de fricción digital</span>
+      </div>
+      <div class="loading-step" id="step-5">
+        <div class="step-dot" id="dot-5"></div>
+        <span>Generando diagnóstico<span class="blink">_</span></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="results-wrap" id="results-wrap">
+    <div class="results-header">
+      <div class="rh-top">
+        <span id="result-label">AUDIT_COMPLETE</span>
+        <span style="color:var(--c-green);font-size:10px;">● ANALISIS_LISTO</span>
+      </div>
+      <div class="rh-body">
+        <div>
+          <div class="font-supply biz-name" id="result-biz-name">—</div>
+          <div class="biz-url" id="result-biz-url">—</div>
+        </div>
+        <div class="score-display">
+          <div class="font-supply score-num" id="result-score" style="color:var(--c-orange);">—</div>
+          <div class="score-label">SCORE DE FRICCIÓN / 10</div>
+          <div style="font-size:9px;color:var(--c-text-muted);margin-top:3px;">ENTRE MÁS ALTO, PEOR</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="problems-section">
+      <div class="problems-title">
+        <span>PROBLEMAS_DETECTADOS — VISTA PARCIAL</span>
+        <span style="color:var(--c-orange);">2 DE VARIOS</span>
+      </div>
+      <div class="problem-card" id="problem-1">
+        <div class="problem-top">
+          <div class="problem-num">01</div>
+          <div style="flex:1;">
+            <div class="problem-title" id="p1-title">—</div>
+            <div class="problem-desc" id="p1-desc">—</div>
+          </div>
+          <span class="severity-badge" id="p1-sev">—</span>
+        </div>
+        <div class="problem-locked">
+          <span style="color:var(--c-text-muted);">🔒</span>
+          <span>Solución disponible en el reporte completo</span>
+        </div>
+      </div>
+      <div class="problem-card" id="problem-2">
+        <div class="problem-top">
+          <div class="problem-num">02</div>
+          <div style="flex:1;">
+            <div class="problem-title" id="p2-title">—</div>
+            <div class="problem-desc" id="p2-desc">—</div>
+          </div>
+          <span class="severity-badge" id="p2-sev">—</span>
+        </div>
+        <div class="problem-locked">
+          <span style="color:var(--c-text-muted);">🔒</span>
+          <span>Solución disponible en el reporte completo</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- UNLOCK BAR -->
+  <div class="unlock-bar" id="unlock-bar" style="max-width:700px;margin:0 auto 4rem;background:var(--c-orange);border-radius:0 0 10px 10px;padding:1.4rem 1.6rem;flex-direction:column;gap:1rem;">
+    <h3 class="font-supply" style="color:#fff;font-size:18px;">¿Quieres el reporte completo?</h3>
+    <p style="font-size:11px;color:rgba(255,255,255,.85);line-height:1.7;">Incluye todos los problemas detectados, soluciones concretas, benchmark competitivo con tus rivales en Google y un plan de 5 Quick Wins priorizados por impacto.</p>
+    <div class="unlock-actions">
+      <button class="btn-unlock" onclick="openModal()">OBTENER_REPORTE_COMPLETO →</button>
+      <a class="btn-unlock-ghost" href="https://calendly.com/juansirtori/30min" target="_blank">AGENDAR_SESIÓN →</a>
+    </div>
+  </div>
+
+  <!-- MODAL -->
+  <div class="modal-overlay" id="modal-overlay" onclick="closeModalOutside(event)">
+    <div class="modal">
+      <div class="modal-header">
+        <span>SOLICITAR_REPORTE_COMPLETO</span>
+        <button class="modal-close" onclick="closeModal()">✕</button>
+      </div>
+
+      <div id="modal-form-wrap">
+        <div class="modal-body">
+          <h3 class="font-supply">Un paso más</h3>
+          <p>Déjanos tus datos y te enviamos el reporte completo. O agenda directamente una sesión de 30 minutos y lo revisamos juntos en vivo.</p>
+
+          <div class="modal-field">
+            <label>Tu nombre</label>
+            <input type="text" id="modal-name" placeholder="Tu nombre" />
+            <label>Tu correo</label>
+            <input type="email" id="modal-email" placeholder="tu@empresa.com" />
+          </div>
+
+          <button class="btn-modal-submit" onclick="submitModal()">ENVIAR — QUIERO MI REPORTE →</button>
+
+          <hr class="modal-divider" />
+
+          <span class="modal-calendly-label">O agenda una sesión directamente:</span>
+          <a class="btn-calendly" href="https://calendly.com/juansirtori/30min" target="_blank">AGENDAR_SESIÓN_GRATUITA →</a>
+
+          <p style="font-size:10px;color:var(--c-text-muted);text-align:center;margin-top:1rem;">Sin compromiso · Respuesta en menos de 24 hrs</p>
+        </div>
+      </div>
+
+      <div class="modal-success" id="modal-success">
+        <div class="modal-success-icon">🔥</div>
+        <h3 class="font-supply">SOLICITUD_ENVIADA</h3>
+        <p>Recibimos tu solicitud. Te contactamos en menos de 24 hrs con el reporte completo.<br><br>También puedes agendar directo:</p>
+        <br>
+        <a class="btn-calendly" href="https://calendly.com/juansirtori/30min" target="_blank" style="display:block;text-align:center;">AGENDAR_SESIÓN →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <a class="footer-logo" href="/">
+      <div class="footer-logo-icon">🔥</div>
+      <div class="font-supply" style="font-size:13px;font-weight:700;color:var(--c-text);">IGNITIA</div>
+    </a>
+    <p>© 2026 IGNITIA · PERFORMANCE CONSULTING</p>
+    <a href="/" style="font-size:10px;color:var(--c-text-muted);text-decoration:none;">← VOLVER AL SITIO</a>
+  </footer>
+
+  <script>
+    let auditData = {};
+
+    async function runAudit() {
+      const name = document.getElementById('biz-name').value.trim();
+      const url  = document.getElementById('biz-url').value.trim();
+
+      if (!name || !url) {
+        alert('Por favor ingresa el nombre y URL del negocio.');
+        return;
+      }
+
+      // Show loading
+      document.getElementById('audit-form').style.display = 'none';
+      const loadingWrap = document.getElementById('loading-wrap');
+      loadingWrap.style.display = 'block';
+
+      // Animate steps
+      const steps = [1,2,3,4,5];
+      const pcts  = ['20%','40%','60%','80%','100%'];
+      for (let i = 0; i < steps.length; i++) {
+        await delay(900);
+        document.getElementById(`dot-${steps[i]}`).classList.add('active');
+        document.getElementById('loading-pct').textContent = pcts[i];
+        if (i > 0) document.getElementById(`dot-${steps[i-1]}`).classList.replace('active','done');
+      }
+
+      // Call Claude API
+      try {
+        const result = await callClaude(name, url);
+        showResults(name, url, result);
+      } catch(e) {
+        console.error(e);
+        showError();
+      }
+    }
+
+    async function callClaude(name, url) {
+      const response = await fetch('/.netlify/functions/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, url })
+      });
+
+      // Rate limit handling
+      if (response.status === 429) {
+        const data = await response.json();
+        showRateLimited(data.hoursLeft);
+        throw new Error('rate_limited');
+      }
+
+      if (!response.ok) {
+        throw new Error(`API error: ${response.status}`);
+      }
+
+      return response.json();
+    }
+
+    function showRateLimited(hoursLeft) {
+      document.getElementById('loading-wrap').style.display = 'none';
+      document.getElementById('audit-form').style.display = 'block';
+
+      // Show rate limit message
+      const msg = document.getElementById('rate-limit-msg');
+      if (msg) {
+        msg.style.display = 'block';
+        msg.querySelector('#hours-left').textContent = hoursLeft;
+      }
+    }
+
+    function showResults(name, url, data) {
+      document.getElementById('loading-wrap').style.display = 'none';
+
+      // Populate
+      document.getElementById('result-biz-name').textContent = name.toUpperCase();
+      document.getElementById('result-biz-url').textContent   = url;
+      document.getElementById('result-score').textContent     = `${data.score}/10`;
+
+      // Score color
+      const scoreEl = document.getElementById('result-score');
+      if (data.score >= 7)      scoreEl.style.color = 'var(--c-red)';
+      else if (data.score >= 5) scoreEl.style.color = 'var(--c-yellow)';
+      else                      scoreEl.style.color = 'var(--c-green)';
+
+      // Problems
+      const p = data.problems;
+      document.getElementById('p1-title').textContent = p[0].title;
+      document.getElementById('p1-desc').textContent  = p[0].description;
+      document.getElementById('p2-title').textContent = p[1].title;
+      document.getElementById('p2-desc').textContent  = p[1].description;
+
+      // Severity badges
+      setSeverity('p1-sev', p[0].severity);
+      setSeverity('p2-sev', p[1].severity);
+
+      // Store for modal
+      auditData = { name, url, score: data.score };
+
+      // Show results + unlock
+      document.getElementById('results-wrap').style.display = 'block';
+      document.getElementById('unlock-bar').style.display   = 'flex';
+
+      // Scroll to results
+      setTimeout(() => {
+        document.getElementById('results-wrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 200);
+    }
+
+    function setSeverity(elId, sev) {
+      const el = document.getElementById(elId);
+      if (sev === 'HIGH') {
+        el.textContent = 'CRÍTICO';
+        el.className = 'severity-badge sev-high';
+      } else {
+        el.textContent = 'IMPORTANTE';
+        el.className = 'severity-badge sev-med';
+      }
+    }
+
+    function showError() {
+      document.getElementById('loading-wrap').style.display = 'none';
+      document.getElementById('audit-form').style.display = 'block';
+      document.getElementById('audit-form').style.border = '1px solid var(--c-red)';
+      alert('Hubo un error al analizar el sitio. Verifica la URL e intenta de nuevo.');
+    }
+
+    function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+    // ── MODAL ──────────────────────────────────────────────────────
+    function openModal() {
+      document.getElementById('modal-overlay').classList.add('open');
+    }
+
+    function closeModal() {
+      document.getElementById('modal-overlay').classList.remove('open');
+    }
+
+    function closeModalOutside(e) {
+      if (e.target === document.getElementById('modal-overlay')) closeModal();
+    }
+
+    async function submitModal() {
+      const name  = document.getElementById('modal-name').value.trim();
+      const email = document.getElementById('modal-email').value.trim();
+
+      if (!name || !email) {
+        alert('Por favor completa nombre y correo.');
+        return;
+      }
+
+      // Submit to Netlify Forms
+      await fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({
+          'form-name': 'audit-lead',
+          nombre: name,
+          correo: email,
+          negocio: auditData.name || '',
+          url_negocio: auditData.url || '',
+          score: auditData.score || ''
+        }).toString()
+      }).catch(() => {});
+
+      // Show success
+      document.getElementById('modal-form-wrap').style.display = 'none';
+      document.getElementById('modal-success').style.display = 'block';
+    }
+  </script>
+
+  <!-- Netlify form detection -->
+  <form name="audit-lead" data-netlify="true" hidden>
+    <input type="text" name="nombre" />
+    <input type="email" name="correo" />
+    <input type="text" name="negocio" />
+    <input type="text" name="url_negocio" />
+    <input type="text" name="score" />
+  </form>
+
+</body>
+</html>
