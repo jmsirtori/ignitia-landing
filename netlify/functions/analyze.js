@@ -169,7 +169,7 @@ Reglas críticas:
     }
 
     // Save to Google Sheets (fire and forget — don't block response)
-    const sheetsWebhook = 'https://script.google.com/macros/s/AKfycbxWBpavSaqWHa1Acx7hTPPLoaNoOBP0wA3sdG5f7Mo5ebTWWe-qwTfJ4SqFpUWuI901gg/exec';
+    const sheetsWebhook = '/.netlify/functions/save-lead';
     fetch(sheetsWebhook, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
