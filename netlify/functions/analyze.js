@@ -168,9 +168,9 @@ Reglas críticas:
       return { statusCode: 502, headers, body: JSON.stringify({ error: 'Incomplete response' }) };
     }
 
-    // Save to Google Sheets (fire and forget — don't block response)
-    const sheetsWebhook = '/.netlify/functions/save-lead';
-    fetch(sheetsWebhook, {
+    // Save lead to Notion (fire and forget — don't block response)
+    const notionFn = '/.netlify/functions/save-lead';
+    fetch(notionFn, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -181,7 +181,7 @@ Reglas críticas:
         problema_1: result.problems[0]?.title || '',
         problema_2: result.problems[1]?.title || ''
       })
-    }).catch(err => console.error('Sheets error:', err));
+    }).catch(err => console.error('Notion save error:', err));
 
     return {
       statusCode: 200,
