@@ -169,7 +169,7 @@ Reglas críticas:
     }
 
     // Save to Google Sheets (fire and forget — don't block response)
-    const sheetsWebhook = 'https://script.google.com/macros/s/AKfycbzg7MLr0QYsVPKfXfsH7BUylulByKS3ClJNykgdGQDq082qPM9gn9Gme898CrECRH7v/exec';
+    const sheetsWebhook = 'https://script.google.com/macros/s/AKfycbxWBpavSaqWHa1Acx7hTPPLoaNoOBP0wA3sdG5f7Mo5ebTWWe-qwTfJ4SqFpUWuI901gg/exec';
     fetch(sheetsWebhook, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
