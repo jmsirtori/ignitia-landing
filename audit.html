@@ -696,6 +696,21 @@
         }).toString()
       }).catch(() => {});
 
+      // Also save to Google Sheets
+      await fetch('https://script.google.com/macros/s/AKfycbzg7MLr0QYsVPKfXfsH7BUylulByKS3ClJNykgdGQDq082qPM9gn9Gme898CrECRH7v/exec', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          source:           'contact',
+          fuente:           'audit_page',
+          nombre:           name,
+          correo:           email,
+          negocio_auditado: auditData.name  || '',
+          url_negocio:      auditData.url   || '',
+          score_friccion:   auditData.score || ''
+        })
+      }).catch(() => {});
+
       // Show success
       document.getElementById('modal-form-wrap').style.display = 'none';
       document.getElementById('modal-success').style.display = 'block';
