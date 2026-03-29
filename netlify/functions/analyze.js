@@ -168,6 +168,21 @@ Reglas críticas:
       return { statusCode: 502, headers, body: JSON.stringify({ error: 'Incomplete response' }) };
     }
 
+    // Save to Google Sheets (fire and forget — don't block response)
+    const sheetsWebhook = 'https://script.google.com/macros/s/AKfycbzg7MLr0QYsVPKfXfsH7BUylulByKS3ClJNykgdGQDq082qPM9gn9Gme898CrECRH7v/exec';
+    fetch(sheetsWebhook, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        source:     'audit',
+        negocio:    name,
+        url:        url,
+        score:      String(result.score),
+        problema_1: result.problems[0]?.title || '',
+        problema_2: result.problems[1]?.title || ''
+      })
+    }).catch(err => console.error('Sheets error:', err));
+
     return {
       statusCode: 200,
       headers,
