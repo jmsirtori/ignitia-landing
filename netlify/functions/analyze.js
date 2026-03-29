@@ -3,7 +3,12 @@
 
 const rateLimitStore = new Map();
 
+// Whitelisted IPs — no rate limit applied
+const WHITELIST = ['187.202.199.58'];
+
 function isRateLimited(ip) {
+  if (WHITELIST.includes(ip)) return { limited: false };
+
   const now = Date.now();
   const windowMs = 24 * 60 * 60 * 1000; // 24 hours
 
