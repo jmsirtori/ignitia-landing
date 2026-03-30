@@ -57,12 +57,18 @@
     gtag('config', 'G-WK0T1JZZPT');
   </script>
 
-  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <!-- ═══ FONT PRELOAD — carga las fuentes antes de renderizar ════════ -->
+  <!-- Preload le dice al browser: "descarga estas fuentes YA, no esperes a necesitarlas" -->
+  <link rel="preload" href="https://fonts.cdnfonts.com/s/77402/Supply-Regular.woff" as="font" type="font/woff" crossorigin />
+  <link rel="preload" href="https://fonts.cdnfonts.com/s/15444/CordiaNew.woff" as="font" type="font/woff" crossorigin />
   <style>
     @font-face { font-family: 'Supply'; src: url('https://fonts.cdnfonts.com/s/77402/Supply-Regular.woff') format('woff'); }
     @font-face { font-family: 'Cordia New'; src: url('https://fonts.cdnfonts.com/s/15444/CordiaNew.woff') format('woff'); }
+
+    /* ── Reemplaza Tailwind — estas son las únicas 2 clases que usábamos ── */
+    /* "hidden" = display none. "md:flex" = display flex en pantallas medianas+ */
+    .hidden { display: none; }
+    @media (min-width: 768px) { .md\:flex { display: flex !important; } }
 
     :root {
       --c-orange:      #FF4500;
@@ -174,23 +180,6 @@
     .price-card-header { padding:10px 16px; background:var(--c-surf-mid); border-bottom:1px solid var(--c-border); display:flex; justify-content:space-between; align-items:center; }
   </style>
 
-  <script>
-    tailwind.config = {
-      darkMode: "class",
-      theme: {
-        extend: {
-          colors: {
-            "c-orange": "#FF4500",
-            "c-bg": "#060a10",
-            "c-surf-low": "#171c22",
-            "c-surf-mid": "#0f141a",
-            "c-surf-high": "#31353c",
-            "c-border": "#21262d",
-          }
-        }
-      }
-    }
-  </script>
 </head>
 <body class="dark">
 
@@ -251,7 +240,7 @@
       MEDICIÓN CONFIABLE, ESTRUCTURA CORRECTA, OPTIMIZACIÓN BASADA EN DATOS REALES — NO SUPOSICIONES.
     </p>
     <div style="display:flex;gap:12px;flex-wrap:wrap;">
-      <a href="/audit"><button class="btn-primary" data-es="EXECUTE_DIAGNÓSTICO" data-en="EXECUTE_DIAGNOSTIC">EXECUTE_DIAGNÓSTICO <span class="material-symbols-outlined" style="font-size:16px;">terminal</span></button></a>
+      <a href="/audit"><button class="btn-primary" data-es="EXECUTE_DIAGNÓSTICO" data-en="EXECUTE_DIAGNOSTIC">EXECUTE_DIAGNÓSTICO <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg></button></a>
       <a href="#contacto"><button class="btn-ghost" data-es="HABLAR_CON_IGNITIA" data-en="TALK_TO_IGNITIA">HABLAR_CON_IGNITIA</button></a>
     </div>
   </div>
@@ -521,7 +510,7 @@
           </ul>
         </div>
         <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-top:1.5rem;">
-          <span class="material-symbols-outlined" style="font-size:48px;color:var(--c-surf-high);">precision_manufacturing</span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" style="color:var(--c-surf-high);"><circle cx="12" cy="12" r="3"></circle><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"></path></svg>
           <span style="font-size:10px;color:var(--c-text-muted);" data-es="AVAILABILITY: HIGH_PRIORITY" data-en="AVAILABILITY: HIGH_PRIORITY">AVAILABILITY: HIGH_PRIORITY</span>
         </div>
       </div>
@@ -765,7 +754,7 @@
     document.querySelectorAll('[data-es][data-en]').forEach(el => {
       const val = el.getAttribute('data-' + lang);
       if (!val) return;
-      const icon = el.querySelector('.material-symbols-outlined');
+      const icon = el.querySelector('svg');
       if (icon) {
         el.childNodes.forEach(n => { if (n.nodeType === 3) n.textContent = ' '; });
         el.firstChild.textContent = val + ' ';
