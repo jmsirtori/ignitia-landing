@@ -211,7 +211,7 @@
       SYSTEM_ONLINE
     </div>
     <button id="langToggle" onclick="toggleLang()" style="background:var(--c-surf-high);color:var(--c-text-muted);border:1px solid var(--c-border);padding:6px 14px;border-radius:4px;font-size:10px;font-weight:700;cursor:pointer;font-family:'Cordia New','Space Grotesk',monospace;letter-spacing:.15em;text-transform:uppercase;transition:all .2s;" onmouseover="this.style.borderColor='var(--c-orange)';this.style.color='var(--c-orange)'" onmouseout="this.style.borderColor='var(--c-border)';this.style.color='var(--c-text-muted)'">EN</button>
-    <a href="#contacto">
+    <a href="/audit" onclick="gtag('event','click_audit_cta',{location:'navbar'})">
       <button class="btn-primary" style="padding:8px 18px;font-size:11px;" data-es="INICIAR_AUDITORÍA" data-en="START_AUDIT">INICIAR_AUDITORÍA</button>
     </a>
   </div>
@@ -235,8 +235,15 @@
       MEDICIÓN CONFIABLE, ESTRUCTURA CORRECTA, OPTIMIZACIÓN BASADA EN DATOS REALES — NO SUPOSICIONES.
     </p>
     <div style="display:flex;gap:12px;flex-wrap:wrap;">
-      <a href="/audit"><button class="btn-primary" data-es="EXECUTE_DIAGNÓSTICO" data-en="EXECUTE_DIAGNOSTIC">EXECUTE_DIAGNÓSTICO <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg></button></a>
-      <a href="#contacto"><button class="btn-ghost" data-es="HABLAR_CON_IGNITIA" data-en="TALK_TO_IGNITIA">HABLAR_CON_IGNITIA</button></a>
+      <a href="/audit" onclick="gtag('event','click_audit_cta',{location:'hero'})">
+        <button class="btn-primary" data-es="EXECUTE_DIAGNÓSTICO" data-en="EXECUTE_DIAGNOSTIC">EXECUTE_DIAGNÓSTICO <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg></button>
+      </a>
+      <a href="https://wa.me/525565047215?text=Hola%20Juan,%20vengo%20de%20getignitia.com%20y%20quiero%20hablar%20sobre%20mi%20caso." target="_blank" onclick="gtag('event','click_whatsapp',{location:'hero'})">
+        <button class="btn-ghost" style="display:flex;align-items:center;gap:8px;" data-es="HABLAR_POR_WHATSAPP" data-en="CHAT_ON_WHATSAPP">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="currentColor" style="flex-shrink:0;"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+          HABLAR_POR_WHATSAPP
+        </button>
+      </a>
     </div>
   </div>
 
@@ -331,11 +338,8 @@
 
         <!-- CTAs -->
         <div style="display:flex;gap:12px;flex-wrap:wrap;">
-          <a href="/audit">
+          <a href="/audit" onclick="gtag('event','click_audit_cta',{location:'auditor_section'})">
             <button class="btn-primary" style="padding:12px 24px;font-size:11px;" data-es="PROBAR_GRATIS →" data-en="TRY_FREE →">PROBAR_GRATIS →</button>
-          </a>
-          <a href="#contacto">
-            <button class="btn-ghost" style="padding:12px 24px;font-size:11px;" data-es="SOLICITAR_DEMO" data-en="REQUEST_DEMO">SOLICITAR_DEMO</button>
           </a>
         </div>
       </div>
@@ -403,7 +407,7 @@
         <div style="font-size:12px;font-weight:700;color:var(--c-text);margin-bottom:3px;" data-es="¿CUÁNTOS PROBLEMAS TIENE TU SITIO AHORA MISMO?" data-en="HOW MANY PROBLEMS DOES YOUR SITE HAVE RIGHT NOW?">¿CUÁNTOS PROBLEMAS TIENE TU SITIO AHORA MISMO?</div>
         <div style="font-size:11px;color:var(--c-text-muted);" data-es="Análisis gratuito impulsado por IA. Sin registro. En segundos." data-en="Free AI-powered analysis. No registration. In seconds.">Análisis gratuito impulsado por IA. Sin registro. En segundos.</div>
       </div>
-      <a href="/audit">
+      <a href="/audit" onclick="gtag('event','click_audit_cta',{location:'cta_bar'})">
         <button class="btn-primary" style="padding:10px 22px;font-size:11px;" data-es="EJECUTAR_DIAGNÓSTICO →" data-en="RUN_DIAGNOSTIC →">EJECUTAR_DIAGNÓSTICO →</button>
       </a>
     </div>
@@ -517,7 +521,9 @@
           <h3 class="font-supply" style="font-size:1.4rem;font-weight:700;color:#fff;margin-bottom:.8rem;" data-es="AUDITORÍA DE SITIO Y TRÁFICO" data-en="SITE & TRAFFIC AUDIT">AUDITORÍA DE SITIO Y TRÁFICO</h3>
           <p style="font-size:12px;color:rgba(255,255,255,.8);line-height:1.7;" data-es="DIAGNÓSTICO ESTRUCTURADO PARA IDENTIFICAR DÓNDE SE PIERDE TRÁFICO, LEADS Y OPORTUNIDADES." data-en="STRUCTURED DIAGNOSIS TO IDENTIFY WHERE TRAFFIC, LEADS AND OPPORTUNITIES ARE BEING LOST.">DIAGNÓSTICO ESTRUCTURADO PARA IDENTIFICAR DÓNDE SE PIERDE TRÁFICO, LEADS Y OPORTUNIDADES.</p>
         </div>
-        <button style="margin-top:1.5rem;width:100%;padding:12px;background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.6);font-family:'Cordia New','Space Grotesk',monospace;font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;border-radius:3px;transition:background .2s;" onmouseover="this.style.background='rgba(0,0,0,.2)'" onmouseout="this.style.background='transparent'" data-es="EXECUTE_NEXT_STEP →" data-en="EXECUTE_NEXT_STEP →">EXECUTE_NEXT_STEP →</button>
+        <a href="/audit" onclick="gtag('event','click_audit_cta',{location:'services'})" style="display:block;margin-top:1.5rem;">
+          <button style="width:100%;padding:12px;background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.6);font-family:'Cordia New','Space Grotesk',monospace;font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;border-radius:3px;transition:background .2s;" onmouseover="this.style.background='rgba(0,0,0,.2)'" onmouseout="this.style.background='transparent'" data-es="IR_A_LA_AUDITORÍA →" data-en="GO_TO_AUDIT →">IR_A_LA_AUDITORÍA →</button>
+        </a>
       </div>
 
     </div>
@@ -629,7 +635,7 @@
 
     <!-- LEFT: copy -->
     <div>
-      <div style="font-size:10px;color:var(--c-orange);letter-spacing:.2em;margin-bottom:1.2rem;">> EXECUTE_NEXT_STEP</div>
+      <div style="font-size:10px;color:var(--c-orange);letter-spacing:.2em;margin-bottom:1.2rem;">> CONTACTO_DIRECTO</div>
       <h2 class="font-supply" style="font-size:clamp(1.6rem,3vw,2.2rem);font-weight:700;margin-bottom:1rem;line-height:1.1;" data-es="¿INVIERTES EN ADS<br>SIN SABER QUÉ FUNCIONA?" data-en="INVESTING IN ADS<br>WITHOUT KNOWING WHAT WORKS?">¿INVIERTES EN ADS<br>SIN SABER QUÉ FUNCIONA?</h2>
       <p style="font-size:12px;color:var(--c-text-sec);line-height:1.85;margin-bottom:2rem;" data-es="AGENDA UN DIAGNÓSTICO SIN COSTO. EN 30 MINUTOS IDENTIFICAMOS DÓNDE ESTÁ EL PROBLEMA Y CÓMO RESOLVERLO — CON DATOS, NO SUPOSICIONES." data-en="SCHEDULE A FREE DIAGNOSTIC. IN 30 MINUTES WE IDENTIFY WHERE THE PROBLEM IS AND HOW TO SOLVE IT — WITH DATA, NOT GUESSWORK.">AGENDA UN DIAGNÓSTICO SIN COSTO. EN 30 MINUTOS IDENTIFICAMOS DÓNDE ESTÁ EL PROBLEMA Y CÓMO RESOLVERLO — CON DATOS, NO SUPOSICIONES.</p>
 
