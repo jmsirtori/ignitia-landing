@@ -338,11 +338,7 @@
   <!-- NAV -->
   <nav class="nav">
     <a class="logo" href="/">
-      <div class="logo-icon">🔥</div>
-      <div>
-        <div class="logo-name">IGNITIA</div>
-        <div class="logo-tag">DATA-DRIVEN. RESULTS-FOCUSED.</div>
-      </div>
+      <img src="ignitia-logo.svg" alt="Ignitia" style="height:34px;width:auto;" />
     </a>
     <div class="nav-right">
       <div class="nav-dot pulse"></div>
@@ -372,10 +368,14 @@
         <label>URL del sitio web</label>
         <input type="url" id="biz-url" placeholder="https://tuempresa.com" />
       </div>
+      <div class="field">
+        <label>Tu correo</label>
+        <input type="email" id="biz-email" placeholder="tu@empresa.com" />
+      </div>
       <button class="btn-run" id="run-btn" onclick="runAudit()">
         <span id="btn-text">EJECUTAR_DIAGNÓSTICO →</span>
       </button>
-      <p style="font-size:10px;color:var(--c-text-muted);text-align:center;">Sin registro. Sin tarjeta. Sin compromiso.</p>
+      <p style="font-size:10px;color:var(--c-text-muted);text-align:center;">Sin spam. Sin tarjeta. Sin compromiso.</p>
 
       <!-- Rate limit message -->
       <div id="rate-limit-msg" style="display:none;background:rgba(226,75,74,.08);border:1px solid rgba(226,75,74,.3);border-radius:4px;padding:12px 14px;text-align:center;">
@@ -475,10 +475,7 @@
   <div class="unlock-bar" id="unlock-bar" style="max-width:700px;margin:0 auto 4rem;background:var(--c-orange);border-radius:0 0 10px 10px;padding:1.4rem 1.6rem;flex-direction:column;gap:1rem;">
     <h3 class="font-supply" style="color:#fff;font-size:18px;">¿Quieres el reporte completo?</h3>
     <p style="font-size:11px;color:rgba(255,255,255,.85);line-height:1.7;">Incluye todos los problemas detectados, soluciones concretas, benchmark competitivo con tus rivales en Google y un plan de 5 Quick Wins priorizados por impacto.</p>
-    <div class="unlock-actions">
-      <button class="btn-unlock" onclick="openModal()">OBTENER_REPORTE_COMPLETO →</button>
-      <a class="btn-unlock-ghost" href="https://calendly.com/juansirtori/30min" target="_blank">AGENDAR_SESIÓN →</a>
-    </div>
+    <a class="btn-unlock" href="https://calendly.com/juansirtori/30min" target="_blank" style="display:inline-block;text-align:center;text-decoration:none;">OBTENER_REPORTE_COMPLETO →</a>
   </div>
 
   <!-- MODAL -->
@@ -525,8 +522,7 @@
   <!-- FOOTER -->
   <footer class="footer">
     <a class="footer-logo" href="/">
-      <div class="footer-logo-icon">🔥</div>
-      <div class="font-supply" style="font-size:13px;font-weight:700;color:var(--c-text);">IGNITIA</div>
+      <img src="ignitia-logo.svg" alt="Ignitia" style="height:26px;width:auto;" />
     </a>
     <p>© 2026 IGNITIA · PERFORMANCE CONSULTING</p>
     <a href="/" style="font-size:10px;color:var(--c-text-muted);text-decoration:none;">← VOLVER AL SITIO</a>
@@ -536,13 +532,21 @@
     let auditData = {};
 
     async function runAudit() {
-      const name = document.getElementById('biz-name').value.trim();
-      const url  = document.getElementById('biz-url').value.trim();
+      const name  = document.getElementById('biz-name').value.trim();
+      const url   = document.getElementById('biz-url').value.trim();
+      const email = document.getElementById('biz-email').value.trim();
 
       if (!name || !url) {
         alert('Por favor ingresa el nombre y URL del negocio.');
         return;
       }
+      if (!email) {
+        alert('Por favor ingresa tu correo para recibir el reporte.');
+        return;
+      }
+
+      // Store email for later
+      auditData.email = email;
 
       // Show loading
       document.getElementById('audit-form').style.display = 'none';
@@ -561,7 +565,7 @@
 
       // Call Claude API
       try {
-        const result = await callClaude(name, url);
+        const result = await callClaude(name, url, email);
         showResults(name, url, result);
       } catch(e) {
         console.error(e);
@@ -569,11 +573,11 @@
       }
     }
 
-    async function callClaude(name, url) {
+    async function callClaude(name, url, email) {
       const response = await fetch('/.netlify/functions/analyze', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, url })
+        body: JSON.stringify({ name, url, email })
       });
 
       // Rate limit handling
@@ -628,7 +632,7 @@
       setSeverity('p2-sev', p[1].severity);
 
       // Store for modal
-      auditData = { name, url, score: data.score };
+      auditData = { name, url, score: data.score, email: auditData.email };
 
       // Show results + unlock
       document.getElementById('results-wrap').style.display = 'block';
