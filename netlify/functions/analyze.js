@@ -282,15 +282,15 @@ Reglas:
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        source:          'audit',
-        nombre:          name,
-        correo:          email || '',
-        negocio:         name,
-        url:             url,
-        score:           String(result.score),
-        problema_1:      result.problems[0]?.title || '',
-        problema_2:      result.problems[1]?.title || '',
-        consentimiento:  true,
+        source:         'audit',
+        nombre:         name,
+        correo:         email || '',
+        negocio:        name,
+        url:            url,
+        score:          String(result.score),
+        problema_1:     result.problems[0]?.title || '',
+        problema_2:     result.problems[1]?.title || '',
+        consentimiento: true,
         ip
       })
     }).catch(err => console.error('Lead save error:', err));
