@@ -74,9 +74,6 @@ exports.handler = async (event) => {
 
   console.log('🔥 NEW LEAD:', lead);
 
-  // ─────────────────────────────
-  // NOTION INTEGRATION
-  // ─────────────────────────────
   const notionToken = process.env.NOTION_TOKEN;
   const notionDbId = process.env.NOTION_DB_ID || '332676f6042380b8a2fbee08e20506f8';
 
