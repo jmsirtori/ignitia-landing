@@ -6,11 +6,39 @@ const rateLimitStore = new Map();
 // Whitelisted IPs — no rate limit applied
 const WHITELIST = ['187.202.199.58'];
 
+// Allowed origins
+const ALLOWED_ORIGINS = [
+  'https://getignitia.com',
+  'https://www.getignitia.com'
+];
+
+function isAllowedNetlifyPreview(origin = '') {
+  return /^https:\/\/[a-z0-9-]+--[a-z0-9-]+\.netlify\.app$/i.test(origin);
+}
+
+function getCorsHeaders(event) {
+  const requestOrigin = event.headers.origin || event.headers.Origin || '';
+
+  let allowedOrigin = 'https://getignitia.com';
+
+  if (ALLOWED_ORIGINS.includes(requestOrigin) || isAllowedNetlifyPreview(requestOrigin)) {
+    allowedOrigin = requestOrigin;
+  }
+
+  return {
+    'Access-Control-Allow-Origin': allowedOrigin,
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Content-Type': 'application/json',
+    'Vary': 'Origin'
+  };
+}
+
 function isRateLimited(ip) {
   if (WHITELIST.includes(ip)) return { limited: false };
 
   const now = Date.now();
-  const windowMs = 24 * 60 * 60 * 1000;
+  const windowMs = 24 * 60 * 60 * 1000; // 24 hours
 
   if (rateLimitStore.has(ip)) {
     const lastCall = rateLimitStore.get(ip);
@@ -22,6 +50,7 @@ function isRateLimited(ip) {
 
   rateLimitStore.set(ip, now);
 
+  // Cleanup old entries if map grows
   if (rateLimitStore.size > 100) {
     for (const [key, val] of rateLimitStore.entries()) {
       if (now - val > windowMs) rateLimitStore.delete(key);
@@ -32,26 +61,28 @@ function isRateLimited(ip) {
 }
 
 exports.handler = async (event) => {
-  const headers = {
-    'Access-Control-Allow-Origin': 'https://getignitia.com',
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type',
-    'Content-Type': 'application/json'
-  };
+  const headers = getCorsHeaders(event);
 
+  // Handle preflight
   if (event.httpMethod === 'OPTIONS') {
     return { statusCode: 200, headers, body: '' };
   }
 
   if (event.httpMethod !== 'POST') {
-    return { statusCode: 405, headers, body: JSON.stringify({ error: 'Method not allowed' }) };
+    return {
+      statusCode: 405,
+      headers,
+      body: JSON.stringify({ error: 'Method not allowed' })
+    };
   }
 
+  // Get client IP
   const ip =
     event.headers['x-forwarded-for']?.split(',')[0]?.trim() ||
     event.headers['client-ip'] ||
     'unknown';
 
+  // Check rate limit
   const rateCheck = isRateLimited(ip);
   if (rateCheck.limited) {
     return {
@@ -65,31 +96,49 @@ exports.handler = async (event) => {
     };
   }
 
+  // Parse body
   let body;
   try {
     body = JSON.parse(event.body);
   } catch {
-    return { statusCode: 400, headers, body: JSON.stringify({ error: 'Invalid JSON' }) };
+    return {
+      statusCode: 400,
+      headers,
+      body: JSON.stringify({ error: 'Invalid JSON' })
+    };
   }
 
   const { name, url, email } = body;
 
   if (!name || !url) {
-    return { statusCode: 400, headers, body: JSON.stringify({ error: 'Missing name or url' }) };
+    return {
+      statusCode: 400,
+      headers,
+      body: JSON.stringify({ error: 'Missing name or url' })
+    };
   }
 
+  // Validate URL format
   try {
     new URL(url);
   } catch {
-    return { statusCode: 400, headers, body: JSON.stringify({ error: 'Invalid URL format' }) };
+    return {
+      statusCode: 400,
+      headers,
+      body: JSON.stringify({ error: 'Invalid URL format' })
+    };
   }
 
+  // Call Anthropic API
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
-    return { statusCode: 500, headers, body: JSON.stringify({ error: 'API key not configured' }) };
+    return {
+      statusCode: 500,
+      headers,
+      body: JSON.stringify({ error: 'API key not configured' })
+    };
   }
 
-  // 🔥 PROMPT MEJORADO (clave del sistema)
   const prompt = `Eres un especialista en estrategia digital y conversión para negocios B2B.
 
 Tu trabajo NO es detectar errores técnicos aislados. Tu trabajo es identificar:
@@ -159,37 +208,77 @@ Reglas:
     });
 
     if (!response.ok) {
-      const err = await response.json();
+      let err;
+      try {
+        err = await response.json();
+      } catch {
+        err = { message: 'Could not parse Anthropic error response' };
+      }
+
       console.error('Anthropic error:', err);
-      return { statusCode: 502, headers, body: JSON.stringify({ error: 'API error', detail: err }) };
+
+      return {
+        statusCode: 502,
+        headers,
+        body: JSON.stringify({
+          error: 'API error',
+          detail: err
+        })
+      };
     }
 
     const data = await response.json();
 
     let text = '';
-    for (const block of data.content) {
+    for (const block of data.content || []) {
       if (block.type === 'text') text += block.text;
     }
 
     const jsonMatch = text.match(/\{[\s\S]*\}/);
     if (!jsonMatch) {
       console.error('No JSON in response:', text);
-      return { statusCode: 502, headers, body: JSON.stringify({ error: 'Invalid response format' }) };
+      return {
+        statusCode: 502,
+        headers,
+        body: JSON.stringify({
+          error: 'Invalid response format',
+          raw: text
+        })
+      };
     }
 
-    const result = JSON.parse(jsonMatch[0]);
+    let result;
+    try {
+      result = JSON.parse(jsonMatch[0]);
+    } catch (parseErr) {
+      console.error('JSON parse error:', parseErr, jsonMatch[0]);
+      return {
+        statusCode: 502,
+        headers,
+        body: JSON.stringify({
+          error: 'Invalid JSON from model',
+          detail: parseErr.message
+        })
+      };
+    }
 
-    // 🔧 Validación mejorada
     if (
       typeof result.score !== 'number' ||
       !Array.isArray(result.problems) ||
       result.problems.length < 2
     ) {
-      return { statusCode: 502, headers, body: JSON.stringify({ error: 'Incomplete response' }) };
+      return {
+        statusCode: 502,
+        headers,
+        body: JSON.stringify({
+          error: 'Incomplete response',
+          result
+        })
+      };
     }
 
-    // Save lead (no bloquea respuesta)
-    fetch('/.netlify/functions/save-lead', {
+    // Save lead (fire and forget)
+    fetch(`${headers['Access-Control-Allow-Origin']}/.netlify/functions/save-lead`.replace(/\/\.netlify/, '/.netlify'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -201,7 +290,7 @@ Reglas:
         problema_1: result.problems[0]?.title || '',
         problema_2: result.problems[1]?.title || ''
       })
-    }).catch(err => console.error('Notion save error:', err));
+    }).catch(err => console.error('Lead save error:', err));
 
     return {
       statusCode: 200,
@@ -214,7 +303,10 @@ Reglas:
     return {
       statusCode: 500,
       headers,
-      body: JSON.stringify({ error: 'Internal error', detail: err.message })
+      body: JSON.stringify({
+        error: 'Internal error',
+        detail: err.message
+      })
     };
   }
 };
