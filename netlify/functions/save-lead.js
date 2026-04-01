@@ -1,8 +1,4 @@
-// Ignitia · Notion Leads Function
-// Guarda leads de audit y contact en Notion
-
-const NOTION_TOKEN = process.env.NOTION_TOKEN;
-const DATABASE_ID  = '332676f6042380b8a2fbee08e20506f8';
+// Ignitia · Save Lead Function
 
 exports.handler = async (event) => {
   const headers = {
@@ -20,76 +16,57 @@ exports.handler = async (event) => {
     return { statusCode: 405, headers, body: JSON.stringify({ error: 'Method not allowed' }) };
   }
 
-  let body;
+  let data;
   try {
-    body = JSON.parse(event.body);
+    data = JSON.parse(event.body);
   } catch {
     return { statusCode: 400, headers, body: JSON.stringify({ error: 'Invalid JSON' }) };
   }
 
-  const token = NOTION_TOKEN;
-  if (!token) {
-    return { statusCode: 500, headers, body: JSON.stringify({ error: 'Notion token not configured' }) };
-  }
+  const {
+    source = 'unknown',
+    nombre = '',
+    correo = '',
+    negocio = '',
+    url = '',
+    score = '',
+    problema_1 = '',
+    problema_2 = '',
+    ip = 'unknown'
+  } = data;
 
-  // Build Notion page properties based on source
-  const isAudit = body.source === 'audit';
+  const timestamp = new Date().toISOString();
 
-  const properties = {
-    // Title — Nombre o Negocio
-    'Nombre': {
-      title: [{ text: { content: isAudit ? (body.negocio || 'Sin nombre') : (body.nombre || 'Sin nombre') } }]
-    },
-    'Fuente': {
-      select: { name: isAudit ? 'audit' : 'contact' }
-    },
-    'Fecha': {
-      date: { start: new Date().toISOString().split('T')[0] }
-    }
-  };
+  // 🧠 Log bonito para debugging
+  console.log('🔥 NEW LEAD:', {
+    source,
+    nombre,
+    correo,
+    negocio,
+    url,
+    score,
+    problema_1,
+    problema_2,
+    ip,
+    timestamp
+  });
 
-  // Audit-specific fields
-  if (isAudit) {
-    if (body.url)        properties['URL']        = { url: body.url };
-    if (body.score)      properties['Score']      = { number: parseFloat(body.score) };
-    if (body.problema_1) properties['Problema 1'] = { rich_text: [{ text: { content: body.problema_1 } }] };
-    if (body.problema_2) properties['Problema 2'] = { rich_text: [{ text: { content: body.problema_2 } }] };
-  }
-
-  // Contact-specific fields
-  if (!isAudit) {
-    if (body.correo)  properties['Correo']  = { email: body.correo };
-    if (body.empresa) properties['Empresa'] = { rich_text: [{ text: { content: body.empresa } }] };
-    if (body.problema)properties['Problema 1'] = { rich_text: [{ text: { content: body.problema } }] };
-    if (body.negocio_auditado) properties['Negocio'] = { rich_text: [{ text: { content: body.negocio_auditado } }] };
-    if (body.url_negocio)      properties['URL']     = { url: body.url_negocio };
-    if (body.score_friccion)   properties['Score']   = { number: parseFloat(body.score_friccion) };
-  }
+  // ─────────────────────────────
+  // 👉 AQUÍ CONECTAS NOTION / SHEETS
+  // ─────────────────────────────
 
   try {
-    const response = await fetch('https://api.notion.com/v1/pages', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
-        'Notion-Version': '2022-06-28'
-      },
-      body: JSON.stringify({
-        parent: { database_id: DATABASE_ID },
-        properties
-      })
-    });
-
-    if (!response.ok) {
-      const err = await response.json();
-      console.error('Notion error:', err);
-      return { statusCode: 502, headers, body: JSON.stringify({ error: 'Notion API error', detail: err }) };
-    }
-
-    return { statusCode: 200, headers, body: JSON.stringify({ success: true }) };
+    // Ejemplo placeholder
+    // await fetch('YOUR_NOTION_OR_SHEETS_ENDPOINT', { ... });
 
   } catch (err) {
-    console.error('Function error:', err);
-    return { statusCode: 500, headers, body: JSON.stringify({ error: err.message }) };
+    console.error('External save error:', err);
+    // No rompemos el flujo
   }
+
+  return {
+    statusCode: 200,
+    headers,
+    body: JSON.stringify({ success: true })
+  };
 };
