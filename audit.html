@@ -59,7 +59,6 @@
     ::-webkit-scrollbar-track { background: var(--c-bg); }
     ::-webkit-scrollbar-thumb { background: var(--c-surf-high); border-radius: 2px; }
 
-    /* NAV */
     .nav {
       position: sticky; top: 0; z-index: 20;
       background: var(--c-surf-mid);
@@ -71,7 +70,6 @@
     .nav-right { display: flex; align-items: center; gap: 10px; font-size: 10px; color: var(--c-green); }
     .nav-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--c-green); }
 
-    /* HERO */
     .hero {
       max-width: 760px; margin: 0 auto;
       padding: 4rem 2rem 3rem;
@@ -92,16 +90,12 @@
     }
     .hero h1 span { color: var(--c-orange); }
     .hero p {
-      font-size: 12px;
-      color: var(--c-text-sec);
-      line-height: 1.85;
-      margin-bottom: 2.5rem;
-      max-width: 520px;
-      margin-left: auto;
-      margin-right: auto;
+      font-size: 12px; color: var(--c-text-sec); line-height: 1.85;
+      margin-bottom: 2.5rem; max-width: 520px; margin-left: auto; margin-right: auto;
+      text-transform: none;
+      letter-spacing: 0.04em;
     }
 
-    /* INPUT FORM */
     .audit-form {
       background: var(--c-surf-low);
       border: 1px solid var(--c-border);
@@ -127,49 +121,15 @@
     .field input:focus { border-color: var(--c-orange); }
     .field input::placeholder { color: var(--c-text-muted); }
 
-    .consent-wrap {
-      background: rgba(255,255,255,0.02);
-      border: 1px solid var(--c-border);
-      border-radius: 4px;
-      padding: 10px 12px;
-    }
-    .consent-label {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      font-size: 10px;
-      color: var(--c-text-muted);
-      line-height: 1.6;
-      cursor: pointer;
-      text-transform: none;
-      letter-spacing: 0.03em;
-    }
-    .consent-label input {
-      margin-top: 2px;
-      accent-color: var(--c-orange);
-      cursor: pointer;
-      flex-shrink: 0;
-    }
-    .consent-label a {
-      color: var(--c-orange);
-      text-decoration: none;
-    }
-    .consent-label a:hover {
-      text-decoration: underline;
-    }
-
     .btn-run {
       width: 100%; padding: 14px; background: var(--c-orange); color: #fff;
       border: none; border-radius: 4px; font-size: 12px; font-weight: 700;
       cursor: pointer; font-family: 'Cordia New', monospace;
       letter-spacing: .15em; text-transform: uppercase;
-      transition: background .2s, opacity .2s;
-      display: flex; align-items: center; justify-content: center; gap: 8px;
+      transition: background .2s; display: flex; align-items: center; justify-content: center; gap: 8px;
     }
     .btn-run:hover { background: var(--c-orange-h); }
-    .btn-run:disabled { opacity: .45; cursor: not-allowed; background: var(--c-orange); }
 
-    /* LOADING */
     .loading-wrap {
       display: none; max-width: 600px; margin: 2rem auto;
       background: var(--c-surf-low); border: 1px solid var(--c-border);
@@ -196,9 +156,8 @@
     .step-dot.active { background: var(--c-orange); }
     .step-dot.done   { background: var(--c-green); }
 
-    /* RESULTS */
     .results-wrap {
-      display: none; max-width: 700px; margin: 2rem auto 0;
+      display: none; max-width: 700px; margin: 2rem auto 4rem;
     }
     .results-header {
       background: var(--c-surf-low); border: 1px solid var(--c-border);
@@ -212,7 +171,7 @@
     .rh-top span { font-size: 10px; color: var(--c-text-muted); letter-spacing: .15em; }
     .rh-body { padding: 1.4rem 1.6rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
     .biz-name { font-family: 'Supply', sans-serif; font-size: 18px; font-weight: 700; }
-    .biz-url  { font-size: 10px; color: var(--c-text-muted); margin-top: 3px; }
+    .biz-url  { font-size: 10px; color: var(--c-text-muted); margin-top: 3px; text-transform: none; }
     .score-display { text-align: center; }
     .score-num { font-family: 'Supply', sans-serif; font-size: 48px; font-weight: 700; line-height: 1; }
     .score-label { font-size: 9px; color: var(--c-text-muted); letter-spacing: .15em; margin-top: 4px; }
@@ -233,7 +192,7 @@
     .problem-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; margin-bottom: .8rem; }
     .problem-num { font-family: 'Supply', sans-serif; font-size: 28px; font-weight: 700; color: var(--c-surf-high); line-height: 1; flex-shrink: 0; }
     .problem-title { font-size: 14px; font-weight: 700; color: var(--c-text); margin-bottom: 6px; }
-    .problem-desc { font-size: 11px; color: var(--c-text-sec); line-height: 1.7; }
+    .problem-desc { font-size: 11px; color: var(--c-text-sec); line-height: 1.7; text-transform: none; }
     .severity-badge {
       display: inline-flex; align-items: center; gap: 5px;
       font-size: 10px; font-weight: 700; padding: 3px 10px;
@@ -249,45 +208,10 @@
       font-size: 11px; color: var(--c-text-muted);
       padding: 8px 12px; background: var(--c-surf-high);
       border-radius: 4px; margin-top: .8rem;
+      text-transform: none;
       line-height: 1.6;
     }
 
-    /* CTA UNLOCK */
-    .unlock-bar {
-      display: none; max-width: 700px; margin: 0 auto 4rem;
-      background: var(--c-orange);
-      border-radius: 0 0 10px 10px;
-      padding: 1.4rem 1.6rem;
-      flex-direction: column; gap: 1rem;
-    }
-    .unlock-bar h3 { font-family: 'Supply', sans-serif; font-size: 18px; font-weight: 700; color: #fff; }
-    .unlock-bar p  { font-size: 11px; color: rgba(255,255,255,.8); line-height: 1.7; }
-    .unlock-actions {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-    .btn-unlock {
-      background: #fff; color: var(--c-orange);
-      border: none; padding: 12px 24px; border-radius: 4px;
-      font-size: 11px; font-weight: 700; cursor: pointer;
-      font-family: 'Cordia New', monospace; letter-spacing: .15em;
-      text-transform: uppercase; transition: opacity .2s;
-    }
-    .btn-unlock:hover { opacity: .9; }
-    .btn-unlock-ghost {
-      background: transparent; color: #fff;
-      border: 1.5px solid rgba(255,255,255,.5);
-      padding: 12px 24px; border-radius: 4px;
-      font-size: 11px; font-weight: 700; cursor: pointer;
-      font-family: 'Cordia New', monospace; letter-spacing: .15em;
-      text-transform: uppercase; transition: background .2s;
-      text-decoration: none; display: inline-flex; align-items: center;
-    }
-    .btn-unlock-ghost:hover { background: rgba(255,255,255,.1); }
-    .btn-unlock-ghost:hover svg { color: #25D366; }
-
-    /* FOOTER */
     .footer {
       background: var(--c-surf-mid); padding: 1.2rem 2.5rem;
       display: flex; justify-content: space-between; align-items: center;
@@ -298,8 +222,7 @@
     @media (max-width: 600px) {
       .nav { padding: .9rem 1.2rem; }
       .hero { padding: 3rem 1.2rem 2rem; }
-      .audit-form, .loading-wrap, .results-wrap, .unlock-bar { margin-left: 1rem; margin-right: 1rem; }
-      #meaning-bar { margin-left: 1rem !important; margin-right: 1rem !important; }
+      .audit-form, .loading-wrap, .results-wrap { margin-left: 1rem; margin-right: 1rem; }
       .rh-body { flex-direction: column; }
     }
   </style>
@@ -319,7 +242,7 @@
   <section class="hero">
     <div class="hero-pre">// DIAGNOSTICO_DIGITAL_GRATUITO</div>
     <h1 class="font-supply">¿Cuántos problemas<br>tiene tu sitio <span>ahora mismo?</span></h1>
-    <p>Ingresa el nombre y URL de tu negocio. En segundos detectamos señales de fricción, pérdida de claridad y problemas que pueden estar afectando tu capacidad de generar contactos o convertir tráfico en oportunidades reales.</p>
+    <p>Ingresa el nombre y URL de tu negocio. Nuestra IA analiza tu presencia digital en segundos y te muestra los problemas más críticos que están costándote clientes.</p>
   </section>
 
   <div class="audit-form fade-up" id="audit-form">
@@ -341,25 +264,21 @@
         <input type="email" id="biz-email" placeholder="tu@empresa.com" />
       </div>
 
-      <div class="consent-wrap">
-        <label class="consent-label">
-          <input type="checkbox" id="consent-check" />
-          <span>
-            Acepto el uso de mis datos para generar este diagnóstico y entiendo que es un análisis automatizado basado en información pública.
-            <a href="/legal.html" target="_blank" rel="noopener noreferrer">Ver detalles</a>
-          </span>
-        </label>
-      </div>
-
-      <button class="btn-run" id="run-btn" disabled onclick="runAudit()">
+      <button class="btn-run" id="run-btn" onclick="runAudit()">
         <span id="btn-text">EJECUTAR_DIAGNÓSTICO →</span>
       </button>
 
-      <p style="font-size:10px;color:var(--c-text-muted);text-align:center;">Sin spam. Sin tarjeta. Sin compromiso.</p>
-      <p style="font-size:10px;color:var(--c-text-muted);text-align:center;">Este diagnóstico es informativo y se basa en análisis automatizado de información pública.</p>
+      <div style="display:flex;align-items:flex-start;gap:8px;margin-top:10px;">
+        <input type="checkbox" id="consent-checkbox" style="margin-top:3px;" />
+        <label for="consent-checkbox" style="font-size:10px;color:var(--c-text-muted);text-transform:none;line-height:1.6;letter-spacing:0.04em;">
+          Acepto el <a href="/legal.html" target="_blank" style="color:var(--c-orange);">aviso de privacidad</a>
+        </label>
+      </div>
+
+      <p style="font-size:10px;color:var(--c-text-muted);text-align:center;text-transform:none;">Sin spam. Sin tarjeta. Sin compromiso.</p>
 
       <div id="rate-limit-msg" style="display:none;background:rgba(226,75,74,.08);border:1px solid rgba(226,75,74,.3);border-radius:4px;padding:12px 14px;text-align:center;">
-        <p style="font-size:11px;color:var(--c-red);margin-bottom:8px;">Ya usaste tu diagnóstico gratuito hoy. Disponible en <span id="hours-left">24</span> hrs.</p>
+        <p style="font-size:11px;color:var(--c-red);margin-bottom:8px;text-transform:none;">Ya usaste tu diagnóstico gratuito hoy. Disponible en <span id="hours-left">24</span> hrs.</p>
         <a href="https://calendly.com/juansirtori/30min" target="_blank" style="font-size:11px;color:var(--c-orange);text-decoration:none;letter-spacing:.1em;">AGENDAR SESIÓN DIRECTAMENTE →</a>
       </div>
     </div>
@@ -415,8 +334,8 @@
 
     <div class="problems-section">
       <div class="problems-title">
-        <span>SEÑALES_DE_FRICCIÓN — VISTA PARCIAL</span>
-        <span style="color:var(--c-orange);">2 HALLAZGOS CRÍTICOS</span>
+        <span>PROBLEMAS_DETECTADOS — VISTA PARCIAL</span>
+        <span style="color:var(--c-orange);">2 DE VARIOS</span>
       </div>
       <div class="problem-card" id="problem-1">
         <div class="problem-top">
@@ -429,7 +348,7 @@
         </div>
         <div class="problem-locked">
           <span style="color:var(--c-text-muted);">🔒</span>
-          <span>ESTO APUNTA A UN PROBLEMA MÁS PROFUNDO EN CONVERSIÓN, MEDICIÓN O CLARIDAD COMERCIAL.</span>
+          <span>Solución disponible en el reporte completo</span>
         </div>
       </div>
       <div class="problem-card" id="problem-2">
@@ -443,43 +362,9 @@
         </div>
         <div class="problem-locked">
           <span style="color:var(--c-text-muted);">🔒</span>
-          <span>ESTO APUNTA A UN PROBLEMA MÁS PROFUNDO EN CONVERSIÓN, MEDICIÓN O CLARIDAD COMERCIAL.</span>
+          <span>Solución disponible en el reporte completo</span>
         </div>
       </div>
-    </div>
-  </div>
-
-  <div id="meaning-bar" style="display:none;max-width:700px;margin:0 auto 0;background:var(--c-surf-low);border-left:1px solid var(--c-border);border-right:1px solid var(--c-border);border-top:1px solid var(--c-border);padding:1.2rem 1.6rem;">
-    <div style="font-size:10px;color:var(--c-orange);letter-spacing:.15em;margin-bottom:8px;">QUÉ_SIGNIFICA_ESTO</div>
-    <p style="font-size:11px;color:var(--c-text-sec);line-height:1.8;">
-      ESTOS HALLAZGOS NORMALMENTE INDICAN QUE TU NEGOCIO ESTÁ PERDIENDO VISIBILIDAD, CONFIANZA O CAPACIDAD DE CONVERTIR TRÁFICO EN CONTACTOS REALES. EL REPORTE COMPLETO TE MUESTRA DÓNDE SE ESTÁ PERDIENDO ESE VALOR Y QUÉ PRIORIZAR PRIMERO.
-    </p>
-  </div>
-
-  <div class="unlock-bar" id="unlock-bar" style="max-width:700px;margin:0 auto 4rem;background:var(--c-orange);border-radius:0 0 10px 10px;padding:1.4rem 1.6rem;flex-direction:column;gap:1rem;">
-    <h3 class="font-supply" style="color:#fff;font-size:18px;">ENTIENDE QUÉ ESTÁ PASANDO REALMENTE</h3>
-    <p style="font-size:11px;color:rgba(255,255,255,.85);line-height:1.7;">
-      EL REPORTE COMPLETO INCLUYE MÁS HALLAZGOS, CONTEXTO DE NEGOCIO, BENCHMARK COMPETITIVO Y UN PLAN DE QUICK WINS PRIORIZADOS. LO REVISAMOS CONTIGO EN UNA SESIÓN CORTA PARA DARTE CLARIDAD, NO SOLO INFORMACIÓN.
-    </p>
-    <div class="unlock-actions">
-      <a class="btn-unlock"
-         href="https://calendly.com/juansirtori/30min"
-         target="_blank"
-         onclick="trackEvent('click_calendly', 'audit_unlock')"
-         style="display:inline-block;text-align:center;text-decoration:none;">
-        VER_DIAGNÓSTICO_COMPLETO →
-      </a>
-
-      <a class="btn-unlock-ghost"
-         href="https://wa.me/525565047215?text=Hola%20Juan,%20acabo%20de%20hacer%20la%20mini%20auditor%C3%ADa%20de%20Ignitia%20y%20quiero%20entender%20mejor%20el%20resultado."
-         target="_blank"
-         onclick="trackEvent('click_whatsapp', 'audit_unlock')"
-         style="display:inline-flex;align-items:center;gap:8px;text-decoration:none;">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M12.04 2C6.52 2 2.04 6.48 2.04 12c0 1.99.52 3.86 1.43 5.49L2 22l4.65-1.41A9.94 9.94 0 0012.04 22c5.52 0 10-4.48 10-10S17.56 2 12.04 2zm0 18.2c-1.7 0-3.3-.46-4.67-1.26l-.33-.2-2.76.83.9-2.69-.21-.35a8.18 8.18 0 01-1.25-4.33c0-4.52 3.68-8.2 8.2-8.2s8.2 3.68 8.2 8.2-3.68 8.2-8.2 8.2zm4.52-6.14c-.25-.13-1.48-.73-1.71-.81-.23-.08-.39-.13-.56.13-.17.25-.65.81-.8.97-.15.17-.29.19-.54.06-.25-.13-1.05-.39-2-1.24-.74-.66-1.24-1.47-1.38-1.72-.15-.25-.02-.38.11-.51.11-.11.25-.29.37-.43.12-.15.17-.25.25-.42.08-.17.04-.31-.02-.43-.06-.13-.56-1.35-.77-1.84-.2-.49-.41-.42-.56-.43h-.48c-.17 0-.43.06-.66.31-.23.25-.86.84-.86 2.05s.88 2.39 1 2.56c.13.17 1.73 2.64 4.19 3.7.59.26 1.05.41 1.41.53.59.19 1.12.16 1.54.1.47-.07 1.48-.6 1.69-1.18.21-.58.21-1.08.15-1.18-.06-.1-.23-.16-.48-.29z"/>
-        </svg>
-        REVISAR_POR_WHATSAPP
-      </a>
     </div>
   </div>
 
@@ -488,36 +373,20 @@
       <img src="ignitia-logo.svg" alt="Ignitia" style="height:26px;width:auto;" />
     </a>
     <p>© 2026 IGNITIA · PERFORMANCE CONSULTING</p>
-    <a href="/legal.html" style="font-size:10px;color:var(--c-text-muted);text-decoration:none;">LEGALES</a>
+    <div style="display:flex;gap:12px;align-items:center;">
+      <a href="/legal.html" style="font-size:10px;color:var(--c-text-muted);text-decoration:none;">LEGAL</a>
+      <a href="/" style="font-size:10px;color:var(--c-text-muted);text-decoration:none;">← VOLVER AL SITIO</a>
+    </div>
   </footer>
 
   <script>
-    function trackEvent(action, label) {
-      if (typeof gtag !== 'undefined') {
-        gtag('event', action, {
-          event_category: 'engagement',
-          event_label: label,
-          value: 1
-        });
-      }
-    }
-
     let auditData = {};
 
-    const consentCheck = document.getElementById('consent-check');
-    const runBtn = document.getElementById('run-btn');
-
-    if (consentCheck && runBtn) {
-      consentCheck.addEventListener('change', () => {
-        runBtn.disabled = !consentCheck.checked;
-      });
-    }
-
     async function runAudit() {
-      const consentAccepted = document.getElementById('consent-check').checked;
+      const consent = document.getElementById('consent-checkbox');
 
-      if (!consentAccepted) {
-        alert('Debes aceptar el uso de datos para continuar.');
+      if (!consent || !consent.checked) {
+        alert('Debes aceptar el aviso de privacidad para continuar.');
         return;
       }
 
@@ -534,10 +403,8 @@
         return;
       }
 
-      trackEvent('run_audit', 'audit_started');
-
       auditData.email = email;
-      auditData.consentAccepted = consentAccepted;
+      auditData.consentAccepted = true;
 
       document.getElementById('audit-form').style.display = 'none';
       const loadingWrap = document.getElementById('loading-wrap');
@@ -553,7 +420,7 @@
       }
 
       try {
-        const result = await callClaude(name, url, email, consentAccepted);
+        const result = await callClaude(name, url, email, true);
         showResults(name, url, result);
       } catch(e) {
         console.error(e);
@@ -575,11 +442,7 @@
       }
 
       if (!response.ok) {
-        let errText = '';
-        try {
-          errText = await response.text();
-        } catch {}
-        throw new Error(`API error: ${response.status} ${errText}`);
+        throw new Error(`API error: ${response.status}`);
       }
 
       return response.json();
@@ -617,19 +480,9 @@
       setSeverity('p1-sev', p[0].severity);
       setSeverity('p2-sev', p[1].severity);
 
-      auditData = {
-        name,
-        url,
-        score: data.score,
-        email: auditData.email,
-        consentAccepted: auditData.consentAccepted
-      };
+      auditData = { name, url, score: data.score, email: auditData.email, consentAccepted: true };
 
       document.getElementById('results-wrap').style.display = 'block';
-      document.getElementById('meaning-bar').style.display  = 'block';
-      document.getElementById('unlock-bar').style.display   = 'flex';
-
-      trackEvent('audit_result', 'results_loaded');
 
       setTimeout(() => {
         document.getElementById('results-wrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -655,6 +508,19 @@
     }
 
     function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const inputs = document.querySelectorAll('#biz-name, #biz-url, #biz-email');
+
+      inputs.forEach(input => {
+        input.addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            runAudit();
+          }
+        });
+      });
+    });
   </script>
 
   <form name="audit-lead" data-netlify="true" hidden>
