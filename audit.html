@@ -52,9 +52,6 @@
     @keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
     .fade-up { animation: fadeUp 0.5s ease forwards; }
 
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .spin { animation: spin 1s linear infinite; }
-
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
     .blink { animation: blink 1s step-end infinite; }
 
@@ -62,7 +59,7 @@
     ::-webkit-scrollbar-track { background: var(--c-bg); }
     ::-webkit-scrollbar-thumb { background: var(--c-surf-high); border-radius: 2px; }
 
-    /* ── NAV ─────────────────────────────────────────────────────── */
+    /* NAV */
     .nav {
       position: sticky; top: 0; z-index: 20;
       background: var(--c-surf-mid);
@@ -71,17 +68,10 @@
       display: flex; justify-content: space-between; align-items: center;
     }
     .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-    .logo-icon {
-      width: 30px; height: 30px; border-radius: 7px;
-      background: linear-gradient(135deg, #FF4500, #c43300);
-      display: flex; align-items: center; justify-content: center; font-size: 14px;
-    }
-    .logo-name { font-family: 'Supply', sans-serif; font-size: 15px; font-weight: 700; color: var(--c-text); }
-    .logo-tag { font-size: 9px; color: var(--c-text-muted); letter-spacing: .2em; }
     .nav-right { display: flex; align-items: center; gap: 10px; font-size: 10px; color: var(--c-green); }
     .nav-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--c-green); }
 
-    /* ── HERO ────────────────────────────────────────────────────── */
+    /* HERO */
     .hero {
       max-width: 760px; margin: 0 auto;
       padding: 4rem 2rem 3rem;
@@ -101,9 +91,17 @@
       margin-bottom: 1rem;
     }
     .hero h1 span { color: var(--c-orange); }
-    .hero p { font-size: 12px; color: var(--c-text-sec); line-height: 1.85; margin-bottom: 2.5rem; max-width: 520px; margin-left: auto; margin-right: auto; }
+    .hero p {
+      font-size: 12px;
+      color: var(--c-text-sec);
+      line-height: 1.85;
+      margin-bottom: 2.5rem;
+      max-width: 520px;
+      margin-left: auto;
+      margin-right: auto;
+    }
 
-    /* ── INPUT FORM ──────────────────────────────────────────────── */
+    /* INPUT FORM */
     .audit-form {
       background: var(--c-surf-low);
       border: 1px solid var(--c-border);
@@ -128,17 +126,50 @@
     }
     .field input:focus { border-color: var(--c-orange); }
     .field input::placeholder { color: var(--c-text-muted); }
+
+    .consent-wrap {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--c-border);
+      border-radius: 4px;
+      padding: 10px 12px;
+    }
+    .consent-label {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 10px;
+      color: var(--c-text-muted);
+      line-height: 1.6;
+      cursor: pointer;
+      text-transform: none;
+      letter-spacing: 0.03em;
+    }
+    .consent-label input {
+      margin-top: 2px;
+      accent-color: var(--c-orange);
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .consent-label a {
+      color: var(--c-orange);
+      text-decoration: none;
+    }
+    .consent-label a:hover {
+      text-decoration: underline;
+    }
+
     .btn-run {
       width: 100%; padding: 14px; background: var(--c-orange); color: #fff;
       border: none; border-radius: 4px; font-size: 12px; font-weight: 700;
       cursor: pointer; font-family: 'Cordia New', monospace;
       letter-spacing: .15em; text-transform: uppercase;
-      transition: background .2s; display: flex; align-items: center; justify-content: center; gap: 8px;
+      transition: background .2s, opacity .2s;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
     }
     .btn-run:hover { background: var(--c-orange-h); }
-    .btn-run:disabled { opacity: .6; cursor: not-allowed; }
+    .btn-run:disabled { opacity: .45; cursor: not-allowed; background: var(--c-orange); }
 
-    /* ── LOADING ─────────────────────────────────────────────────── */
+    /* LOADING */
     .loading-wrap {
       display: none; max-width: 600px; margin: 2rem auto;
       background: var(--c-surf-low); border: 1px solid var(--c-border);
@@ -165,7 +196,7 @@
     .step-dot.active { background: var(--c-orange); }
     .step-dot.done   { background: var(--c-green); }
 
-    /* ── RESULTS ─────────────────────────────────────────────────── */
+    /* RESULTS */
     .results-wrap {
       display: none; max-width: 700px; margin: 2rem auto 0;
     }
@@ -186,7 +217,6 @@
     .score-num { font-family: 'Supply', sans-serif; font-size: 48px; font-weight: 700; line-height: 1; }
     .score-label { font-size: 9px; color: var(--c-text-muted); letter-spacing: .15em; margin-top: 4px; }
 
-    /* Problem cards */
     .problems-section { margin-top: 1px; }
     .problems-title {
       background: var(--c-surf-mid); padding: 10px 16px;
@@ -222,7 +252,7 @@
       line-height: 1.6;
     }
 
-    /* ── CTA UNLOCK ──────────────────────────────────────────────── */
+    /* CTA UNLOCK */
     .unlock-bar {
       display: none; max-width: 700px; margin: 0 auto 4rem;
       background: var(--c-orange);
@@ -257,77 +287,11 @@
     .btn-unlock-ghost:hover { background: rgba(255,255,255,.1); }
     .btn-unlock-ghost:hover svg { color: #25D366; }
 
-    /* ── MODAL ───────────────────────────────────────────────────── */
-    .modal-overlay {
-      display: none; position: fixed; inset: 0; z-index: 100;
-      background: rgba(6,10,16,.92);
-      align-items: center; justify-content: center; padding: 1rem;
-    }
-    .modal-overlay.open { display: flex; }
-    .modal {
-      background: var(--c-surf-low); border: 1px solid var(--c-border);
-      border-radius: 10px; overflow: hidden;
-      width: 100%; max-width: 480px;
-      animation: fadeUp .3s ease;
-    }
-    .modal-header {
-      background: var(--c-surf-mid); padding: 12px 16px;
-      border-bottom: 1px solid var(--c-border);
-      display: flex; justify-content: space-between; align-items: center;
-    }
-    .modal-header span { font-size: 10px; color: var(--c-text-muted); letter-spacing: .15em; }
-    .modal-close {
-      background: none; border: none; color: var(--c-text-muted);
-      cursor: pointer; font-size: 18px; line-height: 1; padding: 0 4px;
-    }
-    .modal-body { padding: 1.5rem; }
-    .modal-body h3 { font-family: 'Supply', sans-serif; font-size: 18px; font-weight: 700; margin-bottom: .5rem; }
-    .modal-body p  { font-size: 11px; color: var(--c-text-muted); line-height: 1.7; margin-bottom: 1.4rem; }
-    .modal-field label { font-size: 10px; color: var(--c-text-muted); letter-spacing: .15em; display: block; margin-bottom: 5px; }
-    .modal-field input {
-      width: 100%; background: var(--c-surf-high);
-      border: 1px solid var(--c-border); border-radius: 4px;
-      padding: 10px 12px; color: var(--c-text);
-      font-family: 'Cordia New', monospace; font-size: 11px;
-      letter-spacing: .1em; text-transform: uppercase; outline: none;
-      transition: border-color .2s; margin-bottom: 12px;
-    }
-    .modal-field input:focus { border-color: var(--c-orange); }
-    .modal-divider { border: none; border-top: 1px solid var(--c-border); margin: 1.2rem 0; }
-    .modal-calendly-label { font-size: 10px; color: var(--c-text-muted); letter-spacing: .15em; margin-bottom: .8rem; display: block; }
-    .btn-modal-submit {
-      width: 100%; padding: 13px; background: var(--c-orange); color: #fff;
-      border: none; border-radius: 4px; font-size: 11px; font-weight: 700;
-      cursor: pointer; font-family: 'Cordia New', monospace;
-      letter-spacing: .15em; text-transform: uppercase;
-      transition: background .2s; margin-bottom: 10px;
-    }
-    .btn-modal-submit:hover { background: var(--c-orange-h); }
-    .btn-calendly {
-      width: 100%; padding: 13px; background: transparent; color: var(--c-text-sec);
-      border: 1px solid var(--c-border); border-radius: 4px; font-size: 11px; font-weight: 700;
-      cursor: pointer; font-family: 'Cordia New', monospace;
-      letter-spacing: .15em; text-transform: uppercase;
-      transition: border-color .2s, color .2s; text-decoration: none;
-      display: block; text-align: center;
-    }
-    .btn-calendly:hover { border-color: var(--c-orange); color: var(--c-orange); }
-    .modal-success { display: none; padding: 2rem; text-align: center; }
-    .modal-success-icon { font-size: 36px; margin-bottom: 1rem; }
-    .modal-success h3 { font-family: 'Supply', sans-serif; font-size: 18px; font-weight: 700; color: var(--c-green); margin-bottom: .5rem; }
-    .modal-success p  { font-size: 11px; color: var(--c-text-muted); line-height: 1.7; }
-
-    /* ── FOOTER ──────────────────────────────────────────────────── */
+    /* FOOTER */
     .footer {
       background: var(--c-surf-mid); padding: 1.2rem 2.5rem;
       display: flex; justify-content: space-between; align-items: center;
       border-top: 1px solid var(--c-border); flex-wrap: wrap; gap: 8px;
-    }
-    .footer-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; }
-    .footer-logo-icon {
-      width: 22px; height: 22px; border-radius: 5px;
-      background: linear-gradient(135deg, #FF4500, #c43300);
-      display: flex; align-items: center; justify-content: center; font-size: 10px;
     }
     .footer p { font-size: 10px; color: var(--c-text-muted); }
 
@@ -342,7 +306,6 @@
 </head>
 <body>
 
-  <!-- NAV -->
   <nav class="nav">
     <a class="logo" href="/">
       <img src="ignitia-logo.svg" alt="Ignitia" style="height:34px;width:auto;" />
@@ -353,14 +316,12 @@
     </div>
   </nav>
 
-  <!-- HERO -->
   <section class="hero">
     <div class="hero-pre">// DIAGNOSTICO_DIGITAL_GRATUITO</div>
     <h1 class="font-supply">¿Cuántos problemas<br>tiene tu sitio <span>ahora mismo?</span></h1>
     <p>Ingresa el nombre y URL de tu negocio. En segundos detectamos señales de fricción, pérdida de claridad y problemas que pueden estar afectando tu capacidad de generar contactos o convertir tráfico en oportunidades reales.</p>
   </section>
 
-  <!-- INPUT FORM -->
   <div class="audit-form fade-up" id="audit-form">
     <div class="form-header">
       <span>INIT_AUDIT_SCAN</span>
@@ -379,12 +340,24 @@
         <label>Tu correo</label>
         <input type="email" id="biz-email" placeholder="tu@empresa.com" />
       </div>
-      <button class="btn-run" id="run-btn" onclick="runAudit()">
+
+      <div class="consent-wrap">
+        <label class="consent-label">
+          <input type="checkbox" id="consent-check" />
+          <span>
+            Acepto el uso de mis datos para generar este diagnóstico y entiendo que es un análisis automatizado basado en información pública.
+            <a href="/legal.html" target="_blank" rel="noopener noreferrer">Ver detalles</a>
+          </span>
+        </label>
+      </div>
+
+      <button class="btn-run" id="run-btn" disabled onclick="runAudit()">
         <span id="btn-text">EJECUTAR_DIAGNÓSTICO →</span>
       </button>
-      <p style="font-size:10px;color:var(--c-text-muted);text-align:center;">Sin spam. Sin tarjeta. Sin compromiso.</p>
 
-      <!-- Rate limit message -->
+      <p style="font-size:10px;color:var(--c-text-muted);text-align:center;">Sin spam. Sin tarjeta. Sin compromiso.</p>
+      <p style="font-size:10px;color:var(--c-text-muted);text-align:center;">Este diagnóstico es informativo y se basa en análisis automatizado de información pública.</p>
+
       <div id="rate-limit-msg" style="display:none;background:rgba(226,75,74,.08);border:1px solid rgba(226,75,74,.3);border-radius:4px;padding:12px 14px;text-align:center;">
         <p style="font-size:11px;color:var(--c-red);margin-bottom:8px;">Ya usaste tu diagnóstico gratuito hoy. Disponible en <span id="hours-left">24</span> hrs.</p>
         <a href="https://calendly.com/juansirtori/30min" target="_blank" style="font-size:11px;color:var(--c-orange);text-decoration:none;letter-spacing:.1em;">AGENDAR SESIÓN DIRECTAMENTE →</a>
@@ -392,7 +365,6 @@
     </div>
   </div>
 
-  <!-- LOADING -->
   <div class="loading-wrap" id="loading-wrap">
     <div class="loading-header">
       <span id="loading-title">SCANNING_DIGITAL_PRESENCE...</span>
@@ -422,7 +394,6 @@
     </div>
   </div>
 
-  <!-- RESULTS -->
   <div class="results-wrap" id="results-wrap">
     <div class="results-header">
       <div class="rh-top">
@@ -478,7 +449,6 @@
     </div>
   </div>
 
-  <!-- MEANING BAR -->
   <div id="meaning-bar" style="display:none;max-width:700px;margin:0 auto 0;background:var(--c-surf-low);border-left:1px solid var(--c-border);border-right:1px solid var(--c-border);border-top:1px solid var(--c-border);padding:1.2rem 1.6rem;">
     <div style="font-size:10px;color:var(--c-orange);letter-spacing:.15em;margin-bottom:8px;">QUÉ_SIGNIFICA_ESTO</div>
     <p style="font-size:11px;color:var(--c-text-sec);line-height:1.8;">
@@ -486,7 +456,6 @@
     </p>
   </div>
 
-  <!-- UNLOCK BAR -->
   <div class="unlock-bar" id="unlock-bar" style="max-width:700px;margin:0 auto 4rem;background:var(--c-orange);border-radius:0 0 10px 10px;padding:1.4rem 1.6rem;flex-direction:column;gap:1rem;">
     <h3 class="font-supply" style="color:#fff;font-size:18px;">ENTIENDE QUÉ ESTÁ PASANDO REALMENTE</h3>
     <p style="font-size:11px;color:rgba(255,255,255,.85);line-height:1.7;">
@@ -514,54 +483,12 @@
     </div>
   </div>
 
-  <!-- MODAL -->
-  <div class="modal-overlay" id="modal-overlay" onclick="closeModalOutside(event)">
-    <div class="modal">
-      <div class="modal-header">
-        <span>SOLICITAR_REPORTE_COMPLETO</span>
-        <button class="modal-close" onclick="closeModal()">✕</button>
-      </div>
-
-      <div id="modal-form-wrap">
-        <div class="modal-body">
-          <h3 class="font-supply">Un paso más</h3>
-          <p>Déjanos tus datos y te enviamos el reporte completo. O agenda directamente una sesión de 30 minutos y lo revisamos juntos en vivo.</p>
-
-          <div class="modal-field">
-            <label>Tu nombre</label>
-            <input type="text" id="modal-name" placeholder="Tu nombre" />
-            <label>Tu correo</label>
-            <input type="email" id="modal-email" placeholder="tu@empresa.com" />
-          </div>
-
-          <button class="btn-modal-submit" onclick="submitModal()">ENVIAR — QUIERO MI REPORTE →</button>
-
-          <hr class="modal-divider" />
-
-          <span class="modal-calendly-label">O agenda una sesión directamente:</span>
-          <a class="btn-calendly" href="https://calendly.com/juansirtori/30min" target="_blank">AGENDAR_SESIÓN_GRATUITA →</a>
-
-          <p style="font-size:10px;color:var(--c-text-muted);text-align:center;margin-top:1rem;">Sin compromiso · Respuesta en menos de 24 hrs</p>
-        </div>
-      </div>
-
-      <div class="modal-success" id="modal-success">
-        <div class="modal-success-icon">🔥</div>
-        <h3 class="font-supply">SOLICITUD_ENVIADA</h3>
-        <p>Recibimos tu solicitud. Te contactamos en menos de 24 hrs con el reporte completo.<br><br>También puedes agendar directo:</p>
-        <br>
-        <a class="btn-calendly" href="https://calendly.com/juansirtori/30min" target="_blank" style="display:block;text-align:center;">AGENDAR_SESIÓN →</a>
-      </div>
-    </div>
-  </div>
-
-  <!-- FOOTER -->
   <footer class="footer">
-    <a class="footer-logo" href="/">
+    <a href="/">
       <img src="ignitia-logo.svg" alt="Ignitia" style="height:26px;width:auto;" />
     </a>
     <p>© 2026 IGNITIA · PERFORMANCE CONSULTING</p>
-    <a href="/" style="font-size:10px;color:var(--c-text-muted);text-decoration:none;">← VOLVER AL SITIO</a>
+    <a href="/legal.html" style="font-size:10px;color:var(--c-text-muted);text-decoration:none;">LEGALES</a>
   </footer>
 
   <script>
@@ -577,7 +504,23 @@
 
     let auditData = {};
 
+    const consentCheck = document.getElementById('consent-check');
+    const runBtn = document.getElementById('run-btn');
+
+    if (consentCheck && runBtn) {
+      consentCheck.addEventListener('change', () => {
+        runBtn.disabled = !consentCheck.checked;
+      });
+    }
+
     async function runAudit() {
+      const consentAccepted = document.getElementById('consent-check').checked;
+
+      if (!consentAccepted) {
+        alert('Debes aceptar el uso de datos para continuar.');
+        return;
+      }
+
       const name  = document.getElementById('biz-name').value.trim();
       const url   = document.getElementById('biz-url').value.trim();
       const email = document.getElementById('biz-email').value.trim();
@@ -593,15 +536,13 @@
 
       trackEvent('run_audit', 'audit_started');
 
-      // Store email for later
       auditData.email = email;
+      auditData.consentAccepted = consentAccepted;
 
-      // Show loading
       document.getElementById('audit-form').style.display = 'none';
       const loadingWrap = document.getElementById('loading-wrap');
       loadingWrap.style.display = 'block';
 
-      // Animate steps
       const steps = [1,2,3,4,5];
       const pcts  = ['20%','40%','60%','80%','100%'];
       for (let i = 0; i < steps.length; i++) {
@@ -611,9 +552,8 @@
         if (i > 0) document.getElementById(`dot-${steps[i-1]}`).classList.replace('active','done');
       }
 
-      // Call Claude API
       try {
-        const result = await callClaude(name, url, email);
+        const result = await callClaude(name, url, email, consentAccepted);
         showResults(name, url, result);
       } catch(e) {
         console.error(e);
@@ -621,14 +561,13 @@
       }
     }
 
-    async function callClaude(name, url, email) {
+    async function callClaude(name, url, email, consentAccepted) {
       const response = await fetch('/.netlify/functions/analyze', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, url, email })
+        body: JSON.stringify({ name, url, email, consentAccepted })
       });
 
-      // Rate limit handling
       if (response.status === 429) {
         const data = await response.json();
         showRateLimited(data.hoursLeft);
@@ -636,7 +575,11 @@
       }
 
       if (!response.ok) {
-        throw new Error(`API error: ${response.status}`);
+        let errText = '';
+        try {
+          errText = await response.text();
+        } catch {}
+        throw new Error(`API error: ${response.status} ${errText}`);
       }
 
       return response.json();
@@ -646,7 +589,6 @@
       document.getElementById('loading-wrap').style.display = 'none';
       document.getElementById('audit-form').style.display = 'block';
 
-      // Show rate limit message
       const msg = document.getElementById('rate-limit-msg');
       if (msg) {
         msg.style.display = 'block';
@@ -657,39 +599,38 @@
     function showResults(name, url, data) {
       document.getElementById('loading-wrap').style.display = 'none';
 
-      // Populate
       document.getElementById('result-biz-name').textContent = name.toUpperCase();
       document.getElementById('result-biz-url').textContent   = url;
       document.getElementById('result-score').textContent     = `${data.score}/10`;
 
-      // Score color
       const scoreEl = document.getElementById('result-score');
       if (data.score >= 7)      scoreEl.style.color = 'var(--c-red)';
       else if (data.score >= 5) scoreEl.style.color = 'var(--c-yellow)';
       else                      scoreEl.style.color = 'var(--c-green)';
 
-      // Problems
       const p = data.problems;
       document.getElementById('p1-title').textContent = p[0].title;
       document.getElementById('p1-desc').textContent  = p[0].description;
       document.getElementById('p2-title').textContent = p[1].title;
       document.getElementById('p2-desc').textContent  = p[1].description;
 
-      // Severity badges
       setSeverity('p1-sev', p[0].severity);
       setSeverity('p2-sev', p[1].severity);
 
-      // Store for modal
-      auditData = { name, url, score: data.score, email: auditData.email };
+      auditData = {
+        name,
+        url,
+        score: data.score,
+        email: auditData.email,
+        consentAccepted: auditData.consentAccepted
+      };
 
-      // Show results + interpretation + unlock
       document.getElementById('results-wrap').style.display = 'block';
       document.getElementById('meaning-bar').style.display  = 'block';
       document.getElementById('unlock-bar').style.display   = 'flex';
 
       trackEvent('audit_result', 'results_loaded');
 
-      // Scroll to results
       setTimeout(() => {
         document.getElementById('results-wrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
       }, 200);
@@ -714,71 +655,15 @@
     }
 
     function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
-
-    // ── MODAL ──────────────────────────────────────────────────────
-    function openModal() {
-      document.getElementById('modal-overlay').classList.add('open');
-    }
-
-    function closeModal() {
-      document.getElementById('modal-overlay').classList.remove('open');
-    }
-
-    function closeModalOutside(e) {
-      if (e.target === document.getElementById('modal-overlay')) closeModal();
-    }
-
-    async function submitModal() {
-      const name  = document.getElementById('modal-name').value.trim();
-      const email = document.getElementById('modal-email').value.trim();
-
-      if (!name || !email) {
-        alert('Por favor completa nombre y correo.');
-        return;
-      }
-
-      // Submit to Netlify Forms
-      await fetch('/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams({
-          'form-name': 'audit-lead',
-          nombre: name,
-          correo: email,
-          negocio: auditData.name || '',
-          url_negocio: auditData.url || '',
-          score: auditData.score || ''
-        }).toString()
-      }).catch(() => {});
-
-      // Also save to Google Sheets
-      await fetch('/.netlify/functions/save-lead', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          source:           'contact',
-          fuente:           'audit_page',
-          nombre:           name,
-          correo:           email,
-          negocio_auditado: auditData.name  || '',
-          url_negocio:      auditData.url   || '',
-          score_friccion:   auditData.score || ''
-        })
-      }).catch(() => {});
-
-      // Show success
-      document.getElementById('modal-form-wrap').style.display = 'none';
-      document.getElementById('modal-success').style.display = 'block';
-    }
   </script>
 
-  <!-- Netlify form detection -->
   <form name="audit-lead" data-netlify="true" hidden>
     <input type="text" name="nombre" />
     <input type="email" name="correo" />
     <input type="text" name="negocio" />
     <input type="text" name="url_negocio" />
     <input type="text" name="score" />
+    <input type="text" name="consentimiento" />
   </form>
 
 </body>
