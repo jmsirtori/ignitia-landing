@@ -1,44 +1,15 @@
 // Ignitia · Audit Engine — Netlify Serverless Function
-// Rate limiting: 1 audit per IP per 24 hours
 
 const rateLimitStore = new Map();
 
-// Whitelisted IPs — no rate limit applied
+// Whitelisted IPs
 const WHITELIST = ['187.202.199.58'];
-
-// Allowed origins
-const ALLOWED_ORIGINS = [
-  'https://getignitia.com',
-  'https://www.getignitia.com'
-];
-
-function isAllowedNetlifyPreview(origin = '') {
-  return /^https:\/\/[a-z0-9-]+--[a-z0-9-]+\.netlify\.app$/i.test(origin);
-}
-
-function getCorsHeaders(event) {
-  const requestOrigin = event.headers.origin || event.headers.Origin || '';
-
-  let allowedOrigin = 'https://getignitia.com';
-
-  if (ALLOWED_ORIGINS.includes(requestOrigin) || isAllowedNetlifyPreview(requestOrigin)) {
-    allowedOrigin = requestOrigin;
-  }
-
-  return {
-    'Access-Control-Allow-Origin': allowedOrigin,
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type',
-    'Content-Type': 'application/json',
-    'Vary': 'Origin'
-  };
-}
 
 function isRateLimited(ip) {
   if (WHITELIST.includes(ip)) return { limited: false };
 
   const now = Date.now();
-  const windowMs = 24 * 60 * 60 * 1000; // 24 hours
+  const windowMs = 24 * 60 * 60 * 1000;
 
   if (rateLimitStore.has(ip)) {
     const lastCall = rateLimitStore.get(ip);
@@ -50,7 +21,7 @@ function isRateLimited(ip) {
 
   rateLimitStore.set(ip, now);
 
-  // Cleanup old entries if map grows
+  // Cleanup
   if (rateLimitStore.size > 100) {
     for (const [key, val] of rateLimitStore.entries()) {
       if (now - val > windowMs) rateLimitStore.delete(key);
@@ -61,28 +32,27 @@ function isRateLimited(ip) {
 }
 
 exports.handler = async (event) => {
-  const headers = getCorsHeaders(event);
+  const headers = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Content-Type': 'application/json'
+  };
 
-  // Handle preflight
   if (event.httpMethod === 'OPTIONS') {
     return { statusCode: 200, headers, body: '' };
   }
 
   if (event.httpMethod !== 'POST') {
-    return {
-      statusCode: 405,
-      headers,
-      body: JSON.stringify({ error: 'Method not allowed' })
-    };
+    return { statusCode: 405, headers, body: JSON.stringify({ error: 'Method not allowed' }) };
   }
 
-  // Get client IP
+  // Get IP
   const ip =
     event.headers['x-forwarded-for']?.split(',')[0]?.trim() ||
     event.headers['client-ip'] ||
     'unknown';
 
-  // Check rate limit
   const rateCheck = isRateLimited(ip);
   if (rateCheck.limited) {
     return {
@@ -90,8 +60,7 @@ exports.handler = async (event) => {
       headers,
       body: JSON.stringify({
         error: 'rate_limited',
-        hoursLeft: rateCheck.hoursLeft,
-        message: `Ya usaste tu diagnóstico gratuito. Disponible en ${rateCheck.hoursLeft} hrs.`
+        hoursLeft: rateCheck.hoursLeft
       })
     };
   }
@@ -101,95 +70,54 @@ exports.handler = async (event) => {
   try {
     body = JSON.parse(event.body);
   } catch {
-    return {
-      statusCode: 400,
-      headers,
-      body: JSON.stringify({ error: 'Invalid JSON' })
-    };
+    return { statusCode: 400, headers, body: JSON.stringify({ error: 'Invalid JSON' }) };
   }
 
   const { name, url, email } = body;
 
   if (!name || !url) {
-    return {
-      statusCode: 400,
-      headers,
-      body: JSON.stringify({ error: 'Missing name or url' })
-    };
+    return { statusCode: 400, headers, body: JSON.stringify({ error: 'Missing name or url' }) };
   }
 
-  // Validate URL format
   try {
     new URL(url);
   } catch {
-    return {
-      statusCode: 400,
-      headers,
-      body: JSON.stringify({ error: 'Invalid URL format' })
-    };
+    return { statusCode: 400, headers, body: JSON.stringify({ error: 'Invalid URL format' }) };
   }
 
-  // Call Anthropic API
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
-    return {
-      statusCode: 500,
-      headers,
-      body: JSON.stringify({ error: 'API key not configured' })
-    };
+    return { statusCode: 500, headers, body: JSON.stringify({ error: 'Missing API key' }) };
   }
 
-  const prompt = `Eres un especialista en estrategia digital y conversión para negocios B2B.
-
-Tu trabajo NO es detectar errores técnicos aislados. Tu trabajo es identificar:
-- fricción
-- pérdida de confianza
-- falta de claridad comercial
-- puntos donde un negocio pierde atención, leads o capacidad de decisión
+  const prompt = `Eres un auditor experto de presencia digital para negocios en Latinoamérica.
 
 Analiza el negocio "${name}" con sitio web "${url}".
 
-Busca información real en internet y evalúa:
+Busca información real sobre este negocio en internet. Evalúa:
+- Calidad técnica y contenido del sitio web
+- Presencia en Google Maps
+- Redes sociales
+- SEO básico
+- Experiencia móvil
 
-1. CLARIDAD DEL SITIO
-¿Se entiende qué hace el negocio en segundos? ¿Para quién es?
-
-2. FRICCIÓN DE CONVERSIÓN
-¿Es claro qué hacer después? ¿Hay obstáculos para contactar o convertir?
-
-3. CONFIANZA DIGITAL
-¿El negocio transmite credibilidad? ¿Tiene presencia consistente?
-
-4. MEDICIÓN Y CONTROL
-¿Parece que el negocio puede medir qué funciona y qué no?
-
-5. VISIBILIDAD
-¿El negocio está bien posicionado o es difícil de encontrar?
-
-Responde SOLO con JSON válido:
+Responde SOLO JSON:
 
 {
-  "score": <1-10 donde 10 = máxima fricción>,
+  "score": <1-10>,
   "problems": [
     {
-      "title": "<TÍTULO EN MAYÚSCULAS, MAX 5 PALABRAS>",
-      "description": "<PROBLEMA + IMPACTO EN NEGOCIO. MAYÚSCULAS. SIN SOLUCIONES>",
+      "title": "<MAYÚSCULAS>",
+      "description": "<MAYÚSCULAS>",
       "severity": "<HIGH o MEDIUM>"
     },
     {
-      "title": "<SEGUNDO PROBLEMA>",
-      "description": "<ENFOCADO EN PÉRDIDA DE CLARIDAD, CONFIANZA O LEADS>",
+      "title": "<MAYÚSCULAS>",
+      "description": "<MAYÚSCULAS>",
       "severity": "<HIGH o MEDIUM>"
     }
   ]
-}
-
-Reglas:
-- Problemas específicos, no genéricos
-- NO soluciones
-- Lenguaje claro de negocio, no solo técnico
-- Todo en ESPAÑOL y MAYÚSCULAS
-- Si el sitio no carga → score 9-10`;
+}`;
 
   try {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
@@ -201,96 +129,65 @@ Reglas:
       },
       body: JSON.stringify({
         model: 'claude-haiku-4-5-20251001',
-        max_tokens: 1000,
+        max_tokens: 800,
         tools: [{ type: 'web_search_20250305', name: 'web_search' }],
         messages: [{ role: 'user', content: prompt }]
       })
     });
 
+    const raw = await response.json();
+
     if (!response.ok) {
-      let err;
-      try {
-        err = await response.json();
-      } catch {
-        err = { message: 'Could not parse Anthropic error response' };
-      }
-
-      console.error('Anthropic error:', err);
-
-      return {
-        statusCode: 502,
-        headers,
-        body: JSON.stringify({
-          error: 'API error',
-          detail: err
-        })
-      };
+      console.error('Anthropic error:', raw);
+      return { statusCode: 502, headers, body: JSON.stringify({ error: 'AI error' }) };
     }
-
-    const data = await response.json();
 
     let text = '';
-    for (const block of data.content || []) {
+    raw.content.forEach(block => {
       if (block.type === 'text') text += block.text;
-    }
+    });
 
-    const jsonMatch = text.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) {
-      console.error('No JSON in response:', text);
-      return {
-        statusCode: 502,
-        headers,
-        body: JSON.stringify({
-          error: 'Invalid response format',
-          raw: text
-        })
-      };
+    const match = text.match(/\{[\s\S]*\}/);
+    if (!match) {
+      console.error('No JSON found:', text);
+      return { statusCode: 502, headers, body: JSON.stringify({ error: 'Invalid AI format' }) };
     }
 
     let result;
     try {
-      result = JSON.parse(jsonMatch[0]);
-    } catch (parseErr) {
-      console.error('JSON parse error:', parseErr, jsonMatch[0]);
-      return {
-        statusCode: 502,
-        headers,
-        body: JSON.stringify({
-          error: 'Invalid JSON from model',
-          detail: parseErr.message
-        })
-      };
+      result = JSON.parse(match[0]);
+    } catch (e) {
+      console.error('JSON parse error:', e, match[0]);
+      return { statusCode: 502, headers, body: JSON.stringify({ error: 'Parse error' }) };
     }
 
-    if (
-      typeof result.score !== 'number' ||
-      !Array.isArray(result.problems) ||
-      result.problems.length < 2
-    ) {
-      return {
-        statusCode: 502,
-        headers,
-        body: JSON.stringify({
-          error: 'Incomplete response',
-          result
-        })
-      };
+    if (!result.score || !result.problems || result.problems.length < 2) {
+      return { statusCode: 502, headers, body: JSON.stringify({ error: 'Incomplete AI response' }) };
     }
 
-    // Save lead (fire and forget)
-    fetch(`${headers['Access-Control-Allow-Origin']}/.netlify/functions/save-lead`.replace(/\/\.netlify/, '/.netlify'), {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        source:     'audit',
-        negocio:    name,
-        url:        url,
-        correo:     email || '',
-        score:      String(result.score),
-        problema_1: result.problems[0]?.title || '',
-        problema_2: result.problems[1]?.title || ''
-      })
-    }).catch(err => console.error('Lead save error:', err));
+    // 🔥 Save lead (non-blocking)
+    try {
+      const origin = event.headers.origin || 'https://getignitia.com';
+      const saveLeadUrl = `${origin}/.netlify/functions/save-lead`;
+
+      fetch(saveLeadUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          source: 'audit',
+          nombre: name,
+          correo: email || '',
+          negocio: name,
+          url: url,
+          score: result.score,
+          problema_1: result.problems[0]?.title,
+          problema_2: result.problems[1]?.title,
+          ip
+        })
+      }).catch(err => console.error('Save lead error:', err));
+    } catch (err) {
+      console.error('Save lead wrapper error:', err);
+    }
 
     return {
       statusCode: 200,
@@ -299,14 +196,11 @@ Reglas:
     };
 
   } catch (err) {
-    console.error('Function error:', err);
+    console.error('Function crash:', err);
     return {
       statusCode: 500,
       headers,
-      body: JSON.stringify({
-        error: 'Internal error',
-        detail: err.message
-      })
+      body: JSON.stringify({ error: 'Internal error' })
     };
   }
 };
