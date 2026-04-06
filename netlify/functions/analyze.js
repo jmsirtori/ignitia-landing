@@ -102,13 +102,9 @@ exports.handler = async (event) => {
     return { statusCode: 405, headers, body: JSON.stringify({ error: 'Method not allowed' }) };
   }
 
-const ip = event.headers['x-forwarded-for']?.split(',')[0]?.trim()
-  || event.headers['client-ip']
-  || 'unknown';
-
-console.log('IP detectada:', ip);
-console.log('WHITELIST:', WHITELIST);
-console.log('Incluida:', WHITELIST.includes(ip));
+  const ip = event.headers['x-forwarded-for']?.split(',')[0]?.trim()
+    || event.headers['client-ip']
+    || 'unknown';
 
   const rateCheck = isRateLimited(ip);
   if (rateCheck.limited) {
@@ -149,35 +145,33 @@ console.log('Incluida:', WHITELIST.includes(ip));
     return { statusCode: 500, headers, body: JSON.stringify({ error: 'API key not configured' }) };
   }
 
-  const prompt = `Eres un especialista en estrategia digital y conversión para negocios B2B.
+  const prompt = `Analiza el negocio "${name}" con sitio web "${url}".
 
-Analiza el negocio "${name}" con sitio web "${url}".
+Sigue esta secuencia:
+1. Busca información real del negocio en internet
+2. Identifica el giro del negocio
+3. Audita su presencia digital buscando problemas relevantes para ese tipo de negocio
+4. Prioriza los 2 problemas con mayor impacto en conversión o visibilidad
 
-Busca información real en internet y evalúa la presencia digital.
-
-Responde SOLO con JSON válido, sin texto adicional ni backticks:
+Responde SOLO con JSON válido:
 
 {
-  "score": <1-10 donde 10 = máxima fricción>,
+  "score": <1-10, donde 10 = máxima fricción>,
   "problems": [
     {
       "title": "<TÍTULO EN MAYÚSCULAS, MAX 5 PALABRAS>",
-      "description": "<PROBLEMA + IMPACTO EN NEGOCIO. MAYÚSCULAS. SIN SOLUCIONES>",
+      "description": "<PROBLEMA + IMPACTO. MAYÚSCULAS. SIN SOLUCIONES.>",
       "severity": "<HIGH o MEDIUM>"
     },
     {
       "title": "<SEGUNDO PROBLEMA>",
-      "description": "<ENFOCADO EN PÉRDIDA DE CLARIDAD, CONFIANZA O LEADS>",
+      "description": "<PROBLEMA + IMPACTO. MAYÚSCULAS. SIN SOLUCIONES.>",
       "severity": "<HIGH o MEDIUM>"
     }
   ]
 }
 
-Reglas:
-- Problemas específicos, no genéricos
-- NO soluciones
-- Todo en ESPAÑOL y MAYÚSCULAS
-- Si el sitio no carga → score 9-10`;
+Problemas específicos al giro del negocio. Sin soluciones. Si el sitio no carga → score 9-10.`;
 
   try {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
@@ -189,7 +183,8 @@ Reglas:
       },
       body: JSON.stringify({
         model: 'claude-haiku-4-5-20251001',
-        max_tokens: 1000,
+        max_tokens: 400,
+        system: 'Eres un especialista en estrategia digital, conversión y presencia online. Respondes SOLO con JSON válido, sin texto adicional ni backticks.',
         tools: [{ type: 'web_search_20250305', name: 'web_search' }],
         messages: [{ role: 'user', content: prompt }]
       })
