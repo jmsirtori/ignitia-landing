@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <!-- ========================= -->
-  <!-- HEAD / META / SEO -->
-  <!-- ========================= -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Ignitia · Diagnóstico Digital Gratuito</title>
@@ -12,116 +9,74 @@
   <link rel="canonical" href="https://getignitia.com/audit" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23FF4500'/><text y='.9em' font-size='80'>🔥</text></svg>" />
 
-  <!-- ========================= -->
-  <!-- ESTILOS / UI -->
-  <!-- ========================= -->
   <style>
     @font-face { font-family: 'Supply'; src: url('https://fonts.cdnfonts.com/s/77402/Supply-Regular.woff') format('woff'); }
     @font-face { font-family: 'Cordia New'; src: url('https://fonts.cdnfonts.com/s/15444/CordiaNew.woff') format('woff'); }
 
     :root {
-      --c-orange:     #FF4500;
-      --c-orange-h:   #FF6A33;
-      --c-orange-d:   #c43300;
-      --c-bg:         #060a10;
-      --c-surf-low:   #171c22;
-      --c-surf-mid:   #0f141a;
-      --c-surf-high:  #31353c;
-      --c-border:     #21262d;
-      --c-text:       #e6edf3;
-      --c-text-sec:   #c9d1d9;
-      --c-text-muted: #484f58;
-      --c-green:      #3fb950;
-      --c-yellow:     #d29922;
-      --c-red:        #E24B4A;
-      --c-blue:       #a2c9ff;
+      --c-orange:#FF4500; --c-orange-h:#FF6A33; --c-orange-d:#c43300;
+      --c-bg:#060a10; --c-surf-low:#171c22; --c-surf-mid:#0f141a;
+      --c-surf-high:#31353c; --c-border:#21262d; --c-text:#e6edf3;
+      --c-text-sec:#c9d1d9; --c-text-muted:#484f58;
+      --c-green:#3fb950; --c-yellow:#d29922; --c-red:#E24B4A;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
-
     body {
-      background: var(--c-bg);
-      color: var(--c-text);
+      background: var(--c-bg); color: var(--c-text);
       font-family: 'Cordia New', monospace;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      overflow-x: hidden;
-      min-height: 100vh;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      overflow-x: hidden; min-height: 100vh;
     }
-
     .font-supply { font-family: 'Supply', sans-serif; letter-spacing: -0.02em; }
-
     @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
     .pulse { animation: pulse 2s infinite; }
-
     @keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
     .fade-up { animation: fadeUp 0.5s ease forwards; }
-
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
     .blink { animation: blink 1s step-end infinite; }
-
     ::-webkit-scrollbar { width: 4px; }
     ::-webkit-scrollbar-track { background: var(--c-bg); }
     ::-webkit-scrollbar-thumb { background: var(--c-surf-high); border-radius: 2px; }
 
-    
-
-    /* ========================= */
     /* NAV */
-    /* ========================= */
     .nav {
       position: sticky; top: 0; z-index: 20;
-      background: var(--c-surf-mid);
-      border-bottom: 1px solid var(--c-border);
-      padding: .9rem 2.5rem;
-      display: flex; justify-content: space-between; align-items: center;
+      background: var(--c-surf-mid); border-bottom: 1px solid var(--c-border);
+      padding: .9rem 2.5rem; display: flex; justify-content: space-between; align-items: center;
     }
     .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
     .nav-right { display: flex; align-items: center; gap: 10px; font-size: 10px; color: var(--c-green); }
     .nav-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--c-green); }
 
-    /* ========================= */
     /* HERO */
-    /* ========================= */
-    .hero {
-      max-width: 760px; margin: 0 auto;
-      padding: 4rem 2rem 3rem;
-      text-align: center;
-    }
+    .hero { max-width: 760px; margin: 0 auto; padding: 4rem 2rem 3rem; text-align: center; }
     .hero-pre {
       display: inline-flex; align-items: center; gap: 8px;
       font-size: 10px; color: var(--c-orange); letter-spacing: .2em;
       padding: 4px 14px; background: rgba(255,69,0,.08);
-      border: 1px solid rgba(255,69,0,.2); border-radius: 2px;
-      margin-bottom: 1.4rem;
+      border: 1px solid rgba(255,69,0,.2); border-radius: 2px; margin-bottom: 1.4rem;
     }
     .hero h1 {
-      font-family: 'Supply', sans-serif;
-      font-size: clamp(2rem, 4vw, 3rem);
-      font-weight: 700; line-height: 1.1;
-      margin-bottom: 1rem;
+      font-family: 'Supply', sans-serif; font-size: clamp(2rem,4vw,3rem);
+      font-weight: 700; line-height: 1.1; margin-bottom: 1rem;
     }
     .hero h1 span { color: var(--c-orange); }
     .hero p {
       font-size: 12px; color: var(--c-text-sec); line-height: 1.85;
       margin-bottom: 2.5rem; max-width: 520px; margin-left: auto; margin-right: auto;
-      text-transform: none;
-      letter-spacing: 0.04em;
+      text-transform: none; letter-spacing: 0.04em;
     }
 
-    /* ========================= */
-    /* FORMULARIO */
-    /* ========================= */
+    /* FORM */
     .audit-form {
-      background: var(--c-surf-low);
-      border: 1px solid var(--c-border);
-      border-radius: 10px; overflow: hidden;
-      max-width: 600px; margin: 0 auto;
+      background: var(--c-surf-low); border: 1px solid var(--c-border);
+      border-radius: 10px; overflow: hidden; max-width: 600px; margin: 0 auto;
     }
     .form-header {
-      background: var(--c-surf-mid);
-      padding: 10px 16px; border-bottom: 1px solid var(--c-border);
+      background: var(--c-surf-mid); padding: 10px 16px;
+      border-bottom: 1px solid var(--c-border);
       display: flex; justify-content: space-between; align-items: center;
     }
     .form-header span { font-size: 10px; color: var(--c-text-muted); letter-spacing: .15em; }
@@ -137,7 +92,6 @@
     }
     .field input:focus { border-color: var(--c-orange); }
     .field input::placeholder { color: var(--c-text-muted); }
-
     .btn-run {
       width: 100%; padding: 14px; background: var(--c-orange); color: #fff;
       border: none; border-radius: 4px; font-size: 12px; font-weight: 700;
@@ -147,14 +101,7 @@
     }
     .btn-run:hover { background: var(--c-orange-h); }
 
-    @media (max-width: 600px) {
-      .nav { padding: .9rem 1.2rem; }
-      .hero { padding: 3rem 1.2rem 2rem; }
-      .audit-form { margin-left: 1rem; margin-right: 1rem; }
-    }
-        /* ========================= */
     /* LOADING */
-    /* ========================= */
     .loading-wrap {
       display: none; max-width: 600px; margin: 2rem auto;
       background: var(--c-surf-low); border: 1px solid var(--c-border);
@@ -175,18 +122,13 @@
     .loading-step:last-child { border-bottom: none; }
     .step-dot {
       width: 8px; height: 8px; border-radius: 50%;
-      background: var(--c-surf-high); flex-shrink: 0;
-      transition: background .3s;
+      background: var(--c-surf-high); flex-shrink: 0; transition: background .3s;
     }
     .step-dot.active { background: var(--c-orange); }
     .step-dot.done   { background: var(--c-green); }
 
-    /* ========================= */
-    /* RESULTADOS */
-    /* ========================= */
-    .results-wrap {
-      display: none; max-width: 700px; margin: 2rem auto 4rem;
-    }
+    /* RESULTS */
+    .results-wrap { display: none; max-width: 700px; margin: 2rem auto 0; }
     .results-header {
       background: var(--c-surf-low); border: 1px solid var(--c-border);
       border-radius: 10px 10px 0 0; overflow: hidden;
@@ -212,9 +154,8 @@
       display: flex; justify-content: space-between;
     }
     .problem-card {
-      background: var(--c-surf-low);
-      border: 1px solid var(--c-border); border-top: none;
-      padding: 1.4rem 1.6rem;
+      background: var(--c-surf-low); border: 1px solid var(--c-border);
+      border-top: none; padding: 1.4rem 1.6rem;
     }
     .problem-card:last-of-type { border-radius: 0 0 10px 10px; }
     .problem-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; margin-bottom: .8rem; }
@@ -227,10 +168,10 @@
       border-radius: 20px; letter-spacing: .1em; flex-shrink: 0;
     }
     .severity-badge::before { content: ""; width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
-    .sev-high   { background: rgba(226,75,74,.12); color: var(--c-red); border: 1px solid rgba(226,75,74,.3); }
+    .sev-high { background: rgba(226,75,74,.12); color: var(--c-red); border: 1px solid rgba(226,75,74,.3); }
     .sev-high::before { background: var(--c-red); }
-    .sev-med    { background: rgba(210,153,34,.12); color: var(--c-yellow); border: 1px solid rgba(210,153,34,.3); }
-    .sev-med::before { background: var(--c-yellow); }
+    .sev-med  { background: rgba(210,153,34,.12); color: var(--c-yellow); border: 1px solid rgba(210,153,34,.3); }
+    .sev-med::before  { background: var(--c-yellow); }
     .problem-locked {
       display: flex; align-items: center; gap: 8px;
       font-size: 11px; color: var(--c-text-muted);
@@ -239,20 +180,14 @@
       text-transform: none; line-height: 1.6;
     }
 
-    /* ========================= */
-    /* CTA / UNLOCK */
-    /* ========================= */
+    /* UNLOCK BAR */
     #unlock-bar {
       display: none; max-width: 700px; margin: 0 auto 4rem;
-      background: var(--c-orange);
-      border-radius: 0 0 10px 10px;
-      padding: 1.4rem 1.6rem;
-      flex-direction: column; gap: 1rem;
+      background: var(--c-orange); border-radius: 0 0 10px 10px;
+      padding: 1.4rem 1.6rem; flex-direction: column; gap: 1rem;
     }
 
-    /* ========================= */
     /* FOOTER */
-    /* ========================= */
     .footer {
       background: var(--c-surf-mid); padding: 1.2rem 2.5rem;
       display: flex; justify-content: space-between; align-items: center;
@@ -261,16 +196,16 @@
     .footer p { font-size: 10px; color: var(--c-text-muted); }
 
     @media (max-width: 600px) {
-      .loading-wrap, .results-wrap, #unlock-bar { margin-left: 1rem; margin-right: 1rem; }
+      .nav { padding: .9rem 1.2rem; }
+      .hero { padding: 3rem 1.2rem 2rem; }
+      .audit-form, .loading-wrap, .results-wrap, #unlock-bar { margin-left: 1rem; margin-right: 1rem; }
       .rh-body { flex-direction: column; }
     }
   </style>
 </head>
 <body>
 
-  <!-- ========================= -->
   <!-- NAV -->
-  <!-- ========================= -->
   <nav class="nav">
     <a class="logo" href="/">
       <img src="ignitia-logo.svg" alt="Ignitia" style="height:34px;width:auto;" />
@@ -281,18 +216,14 @@
     </div>
   </nav>
 
-  <!-- ========================= -->
   <!-- HERO -->
-  <!-- ========================= -->
   <section class="hero">
     <div class="hero-pre">// DIAGNOSTICO_DIGITAL_GRATUITO</div>
     <h1 class="font-supply">¿Cuántos problemas<br>tiene tu sitio <span>ahora mismo?</span></h1>
     <p>Ingresa el nombre y URL de tu negocio. Nuestra IA analiza tu presencia digital en segundos y te muestra los problemas más críticos que están costándote clientes.</p>
   </section>
 
-  <!-- ========================= -->
-  <!-- FORMULARIO DE AUDITORÍA -->
-  <!-- ========================= -->
+  <!-- FORMULARIO -->
   <div class="audit-form fade-up" id="audit-form">
     <div class="form-header">
       <span>INIT_AUDIT_SCAN</span>
@@ -316,10 +247,10 @@
         <span id="btn-text">EJECUTAR_DIAGNÓSTICO →</span>
       </button>
 
-      <div style="display:flex;align-items:flex-start;gap:8px;margin-top:10px;">
+      <div style="display:flex;align-items:flex-start;gap:8px;">
         <input type="checkbox" id="consent-checkbox" style="margin-top:3px;" />
         <label for="consent-checkbox" style="font-size:10px;color:var(--c-text-muted);text-transform:none;line-height:1.6;letter-spacing:0.04em;">
-          Acepto el <a href="/legal.html" target="_blank" style="color:var(--c-orange);">aviso de privacidad</a>
+          Acepto el aviso de privacidad
         </label>
       </div>
 
@@ -327,76 +258,50 @@
 
       <div id="rate-limit-msg" style="display:none;background:rgba(226,75,74,.08);border:1px solid rgba(226,75,74,.3);border-radius:4px;padding:12px 14px;text-align:center;">
         <p style="font-size:11px;color:var(--c-red);margin-bottom:8px;text-transform:none;">Ya usaste tu diagnóstico gratuito hoy. Disponible en <span id="hours-left">24</span> hrs.</p>
-        <a href="https://calendly.com/juansirtori/30min" target="_blank" style="font-size:11px;color:var(--c-orange);text-decoration:none;letter-spacing:.1em;">AGENDAR SESIÓN DIRECTAMENTE →</a>
+        <a href="https://wa.me/523349440999?text=Hola%20Juan,%20quiero%20agendar%20mi%20diagn%C3%B3stico%20de%20Ignitia." target="_blank" style="font-size:11px;color:var(--c-orange);text-decoration:none;letter-spacing:.1em;">HABLAR POR WHATSAPP →</a>
       </div>
     </div>
   </div>
-    <!-- ========================= -->
+
   <!-- LOADING -->
-  <!-- ========================= -->
   <div class="loading-wrap" id="loading-wrap">
     <div class="loading-header">
       <span id="loading-title">SCANNING_DIGITAL_PRESENCE...</span>
       <span style="color:var(--c-text-muted);font-size:10px;" id="loading-pct">0%</span>
     </div>
     <div class="loading-body">
-      <div class="loading-step" id="step-1">
-        <div class="step-dot" id="dot-1"></div>
-        <span>Analizando sitio web y estructura técnica</span>
-      </div>
-      <div class="loading-step" id="step-2">
-        <div class="step-dot" id="dot-2"></div>
-        <span>Revisando presencia en Google y Maps</span>
-      </div>
-      <div class="loading-step" id="step-3">
-        <div class="step-dot" id="dot-3"></div>
-        <span>Evaluando redes sociales y contenido</span>
-      </div>
-      <div class="loading-step" id="step-4">
-        <div class="step-dot" id="dot-4"></div>
-        <span>Calculando score de fricción digital</span>
-      </div>
-      <div class="loading-step" id="step-5">
-        <div class="step-dot" id="dot-5"></div>
-        <span>Generando diagnóstico<span class="blink">_</span></span>
-      </div>
+      <div class="loading-step" id="step-1"><div class="step-dot" id="dot-1"></div><span>Analizando sitio web y estructura técnica</span></div>
+      <div class="loading-step" id="step-2"><div class="step-dot" id="dot-2"></div><span>Revisando presencia en Google y Maps</span></div>
+      <div class="loading-step" id="step-3"><div class="step-dot" id="dot-3"></div><span>Evaluando redes sociales y contenido</span></div>
+      <div class="loading-step" id="step-4"><div class="step-dot" id="dot-4"></div><span>Calculando score de fricción digital</span></div>
+      <div class="loading-step" id="step-5"><div class="step-dot" id="dot-5"></div><span>Generando diagnóstico<span class="blink">_</span></span></div>
     </div>
   </div>
 
-  <!-- ========================= -->
   <!-- RESULTADOS -->
-  <!-- ========================= -->
   <div class="results-wrap" id="results-wrap">
     <div class="results-header">
       <div class="rh-top">
         <span>AUDIT_COMPLETE</span>
         <span style="color:var(--c-green);font-size:10px;">● ANALISIS_LISTO</span>
       </div>
-
       <div class="rh-body">
         <div>
           <div class="font-supply biz-name" id="result-biz-name">—</div>
           <div class="biz-url" id="result-biz-url">—</div>
         </div>
-
         <div class="score-display">
           <div class="font-supply score-num" id="result-score">—</div>
           <div class="score-label">SCORE DE FRICCIÓN / 10</div>
-          <div style="font-size:9px;color:var(--c-text-muted);margin-top:3px;">
-            ENTRE MÁS ALTO, PEOR
-          </div>
+          <div style="font-size:9px;color:var(--c-text-muted);margin-top:3px;">ENTRE MÁS ALTO, PEOR</div>
         </div>
       </div>
     </div>
-
-    <!-- PROBLEMAS -->
     <div class="problems-section">
       <div class="problems-title">
         <span>PROBLEMAS_DETECTADOS — VISTA PARCIAL</span>
         <span style="color:var(--c-orange);">2 DE VARIOS</span>
       </div>
-
-      <!-- PROBLEMA 1 -->
       <div class="problem-card">
         <div class="problem-top">
           <div class="problem-num">01</div>
@@ -406,12 +311,8 @@
           </div>
           <span class="severity-badge" id="p1-sev">—</span>
         </div>
-        <div class="problem-locked">
-          🔒 Solución disponible en el reporte completo
-        </div>
+        <div class="problem-locked">🔒 Solución disponible en el reporte completo</div>
       </div>
-
-      <!-- PROBLEMA 2 -->
       <div class="problem-card">
         <div class="problem-top">
           <div class="problem-num">02</div>
@@ -421,406 +322,42 @@
           </div>
           <span class="severity-badge" id="p2-sev">—</span>
         </div>
-        <div class="problem-locked">
-          🔒 Solución disponible en el reporte completo
-        </div>
+        <div class="problem-locked">🔒 Solución disponible en el reporte completo</div>
       </div>
     </div>
   </div>
 
-  <!-- ========================= -->
-  <!-- CTA / UNLOCK + WHATSAPP -->
-  <!-- ========================= -->
-  <div id="unlock-bar" style="display:none;max-width:700px;margin:0 auto 4rem;background:var(--c-orange);border-radius:0 0 10px 10px;padding:1.4rem 1.6rem;flex-direction:column;gap:1rem;">
-
-    <h3 style="color:#fff;font-size:18px;font-family:'Supply';">
-      ¿Quieres el reporte completo?
-    </h3>
-
+  <!-- UNLOCK BAR -->
+  <div id="unlock-bar">
+    <h3 style="color:#fff;font-size:18px;font-family:'Supply';">¿Quieres el reporte completo?</h3>
     <p style="font-size:11px;color:rgba(255,255,255,.85);line-height:1.7;text-transform:none;">
       Incluye todos los problemas detectados, soluciones concretas y un plan de acción.
     </p>
-
     <div style="display:flex;gap:10px;flex-wrap:wrap;">
-
-      <!-- BOTÓN WHATSAPP -->
-      <a 
-        href="https://wa.me/523349440999?text=Hola%20Juan,%20acabo%20de%20hacer%20la%20auditor%C3%ADa%20de%20Ignitia%20y%20quiero%20el%20reporte%20completo."
-        target="_blank"
-        style="background:#fff;color:var(--c-orange);padding:12px 20px;border-radius:4px;font-size:11px;font-weight:700;text-decoration:none;display:flex;align-items:center;gap:8px;">
-
-        💬 HABLAR POR WHATSAPP
+      <a href="https://wa.me/523349440999?text=Hola%20Juan,%20acabo%20de%20hacer%20la%20auditor%C3%ADa%20de%20Ignitia%20y%20quiero%20el%20reporte%20completo."
+         target="_blank"
+         onclick="gtag('event','click_whatsapp',{location:'audit_result'})"
+         style="background:#fff;color:var(--c-orange);padding:12px 20px;border-radius:4px;font-size:11px;font-weight:700;text-decoration:none;display:flex;align-items:center;gap:8px;letter-spacing:.1em;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+        HABLAR POR WHATSAPP
       </a>
-
-      <!-- BOTÓN CALENDLY -->
-      <a 
-        href="https://calendly.com/juansirtori/30min"
-        target="_blank"
-        style="background:transparent;color:#fff;border:1px solid rgba(255,255,255,.5);padding:12px 20px;border-radius:4px;font-size:11px;font-weight:700;text-decoration:none;">
-
+      <a href="https://calendly.com/juansirtori/30min"
+         target="_blank"
+         onclick="gtag('event','click_calendly',{location:'audit_result'})"
+         style="background:transparent;color:#fff;border:1px solid rgba(255,255,255,.5);padding:12px 20px;border-radius:4px;font-size:11px;font-weight:700;text-decoration:none;letter-spacing:.1em;">
         AGENDAR SESIÓN →
       </a>
-
     </div>
   </div>
-    <!-- ========================= -->
+
   <!-- FOOTER -->
-  <!-- ========================= -->
   <footer class="footer">
-    <a href="/">
-      <img src="ignitia-logo.svg" alt="Ignitia" style="height:26px;width:auto;" />
-    </a>
-
+    <a href="/"><img src="ignitia-logo.svg" alt="Ignitia" style="height:26px;width:auto;" /></a>
     <p>© 2026 IGNITIA · PERFORMANCE CONSULTING</p>
-
-    <div style="display:flex;gap:12px;align-items:center;">
-      <a href="/legal.html" style="font-size:10px;color:var(--c-text-muted);text-decoration:none;">LEGAL</a>
-      <a href="/" style="font-size:10px;color:var(--c-text-muted);text-decoration:none;">← VOLVER AL SITIO</a>
-    </div>
+    <a href="/" style="font-size:10px;color:var(--c-text-muted);text-decoration:none;">← VOLVER AL SITIO</a>
   </footer>
 
-  <!--SCRIPT (Lógica de la auditoría)-->
-    <!-- ========================= -->
-  <!-- SCRIPT / LÓGICA DEL AUDIT -->
-  <!-- ========================= -->
-  <script>
-    let auditData = {};
-
-    async function runAudit() {
-      const consent = document.getElementById('consent-checkbox');
-
-      if (!consent || !consent.checked) {
-        alert('Debes aceptar el aviso de privacidad para continuar.');
-        return;
-      }
-
-      const name  = document.getElementById('biz-name').value.trim();
-      const url   = document.getElementById('biz-url').value.trim();
-      const email = document.getElementById('biz-email').value.trim();
-
-      if (!name || !url) {
-        alert('Por favor ingresa el nombre y URL del negocio.');
-        return;
-      }
-
-      if (!email) {
-        alert('Por favor ingresa tu correo.');
-        return;
-      }
-
-      auditData.email = email;
-
-      document.getElementById('audit-form').style.display = 'none';
-      document.getElementById('loading-wrap').style.display = 'block';
-
-      const steps = [1, 2, 3, 4, 5];
-      const pcts = ['20%', '40%', '60%', '80%', '100%'];
-
-      for (let i = 0; i < steps.length; i++) {
-        await delay(900);
-        document.getElementById(`dot-${steps[i]}`).classList.add('active');
-        document.getElementById('loading-pct').textContent = pcts[i];
-
-        if (i > 0) {
-          document.getElementById(`dot-${steps[i - 1]}`).classList.replace('active', 'done');
-        }
-      }
-
-      try {
-        const result = await callAPI(name, url, email);
-        showResults(name, url, result);
-      } catch (e) {
-        console.error(e);
-        if (e.message !== 'rate_limited') {
-          showError();
-        }
-      }
-    }
-
-    async function callAPI(name, url, email) {
-      const response = await fetch('/.netlify/functions/analyze', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, url, email, consentAccepted: true })
-      });
-
-      if (response.status === 429) {
-        const data = await response.json();
-        showRateLimited(data.hoursLeft);
-        throw new Error('rate_limited');
-      }
-
-      if (!response.ok) {
-        throw new Error(`API error: ${response.status}`);
-      }
-
-      return response.json();
-    }
-
-    function showRateLimited(hoursLeft) {
-      document.getElementById('loading-wrap').style.display = 'none';
-      document.getElementById('audit-form').style.display = 'block';
-
-      const msg = document.getElementById('rate-limit-msg');
-      if (msg) {
-        msg.style.display = 'block';
-        msg.querySelector('#hours-left').textContent = hoursLeft;
-      }
-    }
-
-    function showResults(name, url, data) {
-      document.getElementById('loading-wrap').style.display = 'none';
-
-      document.getElementById('result-biz-name').textContent = name.toUpperCase();
-      document.getElementById('result-biz-url').textContent = url;
-      document.getElementById('result-score').textContent = `${data.score}/10`;
-
-      const scoreEl = document.getElementById('result-score');
-      if (data.score >= 7) {
-        scoreEl.style.color = '#E24B4A';
-      } else if (data.score >= 5) {
-        scoreEl.style.color = '#d29922';
-      } else {
-        scoreEl.style.color = '#3fb950';
-      }
-
-      const p = data.problems;
-
-      document.getElementById('p1-title').textContent = p[0].title;
-      document.getElementById('p1-desc').textContent = p[0].description;
-
-      document.getElementById('p2-title').textContent = p[1].title;
-      document.getElementById('p2-desc').textContent = p[1].description;
-
-      setSeverity('p1-sev', p[0].severity);
-      setSeverity('p2-sev', p[1].severity);
-
-      auditData = {
-        name,
-        url,
-        score: data.score,
-        email: auditData.email,
-        consentAccepted: true
-      };
-
-      document.getElementById('results-wrap').style.display = 'block';
-      document.getElementById('unlock-bar').style.display = 'flex';
-
-      setTimeout(() => {
-        document.getElementById('results-wrap').scrollIntoView({
-          behavior: 'smooth',
-          block: 'start'
-        });
-      }, 200);
-    }
-
-    function setSeverity(id, severity) {
-      const el = document.getElementById(id);
-
-      if (severity === 'HIGH') {
-        el.textContent = 'CRÍTICO';
-        el.className = 'severity-badge sev-high';
-      } else {
-        el.textContent = 'IMPORTANTE';
-        el.className = 'severity-badge sev-med';
-      }
-    }
-
-    function showError() {
-      document.getElementById('loading-wrap').style.display = 'none';
-      document.getElementById('audit-form').style.display = 'block';
-      alert('Error al analizar. Intenta de nuevo.');
-    }
-
-    function delay(ms) {
-      return new Promise(resolve => setTimeout(resolve, ms));
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-      const inputs = document.querySelectorAll('#biz-name, #biz-url, #biz-email');
-
-      inputs.forEach(input => {
-        input.addEventListener('keypress', function(e) {
-          if (e.key === 'Enter') {
-            e.preventDefault();
-            runAudit();
-          }
-        });
-      });
-    });
-  </script>
-    <!-- ========================= -->
-  <!-- SCRIPT / LÓGICA DEL AUDIT -->
-  <!-- ========================= -->
-  <script>
-    let auditData = {};
-
-    async function runAudit() {
-      const consent = document.getElementById('consent-checkbox');
-
-      if (!consent || !consent.checked) {
-        alert('Debes aceptar el aviso de privacidad para continuar.');
-        return;
-      }
-
-      const name  = document.getElementById('biz-name').value.trim();
-      const url   = document.getElementById('biz-url').value.trim();
-      const email = document.getElementById('biz-email').value.trim();
-
-      if (!name || !url) {
-        alert('Por favor ingresa el nombre y URL del negocio.');
-        return;
-      }
-
-      if (!email) {
-        alert('Por favor ingresa tu correo.');
-        return;
-      }
-
-      auditData.email = email;
-
-      document.getElementById('audit-form').style.display = 'none';
-      document.getElementById('loading-wrap').style.display = 'block';
-
-      const steps = [1, 2, 3, 4, 5];
-      const pcts = ['20%', '40%', '60%', '80%', '100%'];
-
-      for (let i = 0; i < steps.length; i++) {
-        await delay(900);
-        document.getElementById(`dot-${steps[i]}`).classList.add('active');
-        document.getElementById('loading-pct').textContent = pcts[i];
-
-        if (i > 0) {
-          document.getElementById(`dot-${steps[i - 1]}`).classList.replace('active', 'done');
-        }
-      }
-
-      try {
-        const result = await callAPI(name, url, email);
-        showResults(name, url, result);
-      } catch (e) {
-        console.error(e);
-        if (e.message !== 'rate_limited') {
-          showError();
-        }
-      }
-    }
-
-    async function callAPI(name, url, email) {
-      const response = await fetch('/.netlify/functions/analyze', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, url, email, consentAccepted: true })
-      });
-
-      if (response.status === 429) {
-        const data = await response.json();
-        showRateLimited(data.hoursLeft);
-        throw new Error('rate_limited');
-      }
-
-      if (!response.ok) {
-        throw new Error(`API error: ${response.status}`);
-      }
-
-      return response.json();
-    }
-
-    function showRateLimited(hoursLeft) {
-      document.getElementById('loading-wrap').style.display = 'none';
-      document.getElementById('audit-form').style.display = 'block';
-
-      const msg = document.getElementById('rate-limit-msg');
-      if (msg) {
-        msg.style.display = 'block';
-        msg.querySelector('#hours-left').textContent = hoursLeft;
-      }
-    }
-
-    function showResults(name, url, data) {
-      document.getElementById('loading-wrap').style.display = 'none';
-
-      document.getElementById('result-biz-name').textContent = name.toUpperCase();
-      document.getElementById('result-biz-url').textContent = url;
-      document.getElementById('result-score').textContent = `${data.score}/10`;
-
-      const scoreEl = document.getElementById('result-score');
-      if (data.score >= 7) {
-        scoreEl.style.color = '#E24B4A';
-      } else if (data.score >= 5) {
-        scoreEl.style.color = '#d29922';
-      } else {
-        scoreEl.style.color = '#3fb950';
-      }
-
-      const p = data.problems;
-
-      document.getElementById('p1-title').textContent = p[0].title;
-      document.getElementById('p1-desc').textContent = p[0].description;
-
-      document.getElementById('p2-title').textContent = p[1].title;
-      document.getElementById('p2-desc').textContent = p[1].description;
-
-      setSeverity('p1-sev', p[0].severity);
-      setSeverity('p2-sev', p[1].severity);
-
-      auditData = {
-        name,
-        url,
-        score: data.score,
-        email: auditData.email,
-        consentAccepted: true
-      };
-
-      document.getElementById('results-wrap').style.display = 'block';
-      document.getElementById('unlock-bar').style.display = 'flex';
-
-      setTimeout(() => {
-        document.getElementById('results-wrap').scrollIntoView({
-          behavior: 'smooth',
-          block: 'start'
-        });
-      }, 200);
-    }
-
-    function setSeverity(id, severity) {
-      const el = document.getElementById(id);
-
-      if (severity === 'HIGH') {
-        el.textContent = 'CRÍTICO';
-        el.className = 'severity-badge sev-high';
-      } else {
-        el.textContent = 'IMPORTANTE';
-        el.className = 'severity-badge sev-med';
-      }
-    }
-
-    function showError() {
-      document.getElementById('loading-wrap').style.display = 'none';
-      document.getElementById('audit-form').style.display = 'block';
-      alert('Error al analizar. Intenta de nuevo.');
-    }
-
-    function delay(ms) {
-      return new Promise(resolve => setTimeout(resolve, ms));
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-      const inputs = document.querySelectorAll('#biz-name, #biz-url, #biz-email');
-
-      inputs.forEach(input => {
-        input.addEventListener('keypress', function(e) {
-          if (e.key === 'Enter') {
-            e.preventDefault();
-            runAudit();
-          }
-        });
-      });
-    });
-  </script>
-    <!-- ========================= -->
-  <!-- NETLIFY FORM (LEADS) -->
-  <!-- ========================= -->
+  <!-- NETLIFY FORM DETECTION -->
   <form name="audit-lead" data-netlify="true" hidden>
     <input type="text" name="nombre" />
     <input type="email" name="correo" />
@@ -829,6 +366,123 @@
     <input type="text" name="score" />
     <input type="text" name="consentimiento" />
   </form>
+
+  <!-- SCRIPT — una sola vez -->
+  <script>
+    let auditData = {};
+
+    async function runAudit() {
+      const consent = document.getElementById('consent-checkbox');
+      if (!consent || !consent.checked) {
+        alert('Debes aceptar el aviso de privacidad para continuar.');
+        return;
+      }
+
+      const name  = document.getElementById('biz-name').value.trim();
+      const url   = document.getElementById('biz-url').value.trim();
+      const email = document.getElementById('biz-email').value.trim();
+
+      if (!name || !url) { alert('Por favor ingresa el nombre y URL del negocio.'); return; }
+      if (!email)         { alert('Por favor ingresa tu correo.'); return; }
+
+      auditData.email = email;
+
+      document.getElementById('audit-form').style.display = 'none';
+      document.getElementById('loading-wrap').style.display = 'block';
+
+      const steps = [1,2,3,4,5];
+      const pcts  = ['20%','40%','60%','80%','100%'];
+      for (let i = 0; i < steps.length; i++) {
+        await delay(900);
+        document.getElementById(`dot-${steps[i]}`).classList.add('active');
+        document.getElementById('loading-pct').textContent = pcts[i];
+        if (i > 0) document.getElementById(`dot-${steps[i-1]}`).classList.replace('active','done');
+      }
+
+      try {
+        const result = await callAPI(name, url, email);
+        showResults(name, url, result);
+      } catch (e) {
+        console.error(e);
+        if (e.message !== 'rate_limited') showError();
+      }
+    }
+
+    async function callAPI(name, url, email) {
+      const response = await fetch('/.netlify/functions/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, url, email, consentAccepted: true })
+      });
+
+      if (response.status === 429) {
+        const data = await response.json();
+        showRateLimited(data.hoursLeft);
+        throw new Error('rate_limited');
+      }
+      if (!response.ok) throw new Error(`API error: ${response.status}`);
+      return response.json();
+    }
+
+    function showRateLimited(hoursLeft) {
+      document.getElementById('loading-wrap').style.display = 'none';
+      document.getElementById('audit-form').style.display = 'block';
+      const msg = document.getElementById('rate-limit-msg');
+      if (msg) {
+        msg.style.display = 'block';
+        document.getElementById('hours-left').textContent = hoursLeft;
+      }
+    }
+
+    function showResults(name, url, data) {
+      document.getElementById('loading-wrap').style.display = 'none';
+      document.getElementById('result-biz-name').textContent = name.toUpperCase();
+      document.getElementById('result-biz-url').textContent  = url;
+      document.getElementById('result-score').textContent    = `${data.score}/10`;
+
+      const scoreEl = document.getElementById('result-score');
+      if      (data.score >= 7) scoreEl.style.color = '#E24B4A';
+      else if (data.score >= 5) scoreEl.style.color = '#d29922';
+      else                      scoreEl.style.color = '#3fb950';
+
+      const p = data.problems;
+      document.getElementById('p1-title').textContent = p[0].title;
+      document.getElementById('p1-desc').textContent  = p[0].description;
+      document.getElementById('p2-title').textContent = p[1].title;
+      document.getElementById('p2-desc').textContent  = p[1].description;
+      setSeverity('p1-sev', p[0].severity);
+      setSeverity('p2-sev', p[1].severity);
+
+      auditData = { name, url, score: data.score, email: auditData.email, consentAccepted: true };
+
+      document.getElementById('results-wrap').style.display = 'block';
+      document.getElementById('unlock-bar').style.display   = 'flex';
+
+      setTimeout(() => {
+        document.getElementById('results-wrap').scrollIntoView({ behavior:'smooth', block:'start' });
+      }, 200);
+    }
+
+    function setSeverity(id, sev) {
+      const el = document.getElementById(id);
+      if (sev === 'HIGH') { el.textContent = 'CRÍTICO';    el.className = 'severity-badge sev-high'; }
+      else                { el.textContent = 'IMPORTANTE'; el.className = 'severity-badge sev-med';  }
+    }
+
+    function showError() {
+      document.getElementById('loading-wrap').style.display = 'none';
+      document.getElementById('audit-form').style.display   = 'block';
+      alert('Error al analizar. Intenta de nuevo.');
+    }
+
+    function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('#biz-name, #biz-url, #biz-email').forEach(input => {
+        input.addEventListener('keypress', e => { if (e.key === 'Enter') { e.preventDefault(); runAudit(); } });
+      });
+    });
+  </script>
 
 </body>
 </html>
