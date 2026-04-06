@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+  <!-- ========================= -->
+  <!-- HEAD / META / SEO -->
+  <!-- ========================= -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Ignitia · Diagnóstico Digital Gratuito</title>
@@ -9,6 +12,9 @@
   <link rel="canonical" href="https://getignitia.com/audit" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23FF4500'/><text y='.9em' font-size='80'>🔥</text></svg>" />
 
+  <!-- ========================= -->
+  <!-- ESTILOS / UI -->
+  <!-- ========================= -->
   <style>
     @font-face { font-family: 'Supply'; src: url('https://fonts.cdnfonts.com/s/77402/Supply-Regular.woff') format('woff'); }
     @font-face { font-family: 'Cordia New'; src: url('https://fonts.cdnfonts.com/s/15444/CordiaNew.woff') format('woff'); }
@@ -59,6 +65,11 @@
     ::-webkit-scrollbar-track { background: var(--c-bg); }
     ::-webkit-scrollbar-thumb { background: var(--c-surf-high); border-radius: 2px; }
 
+    
+
+    /* ========================= */
+    /* NAV */
+    /* ========================= */
     .nav {
       position: sticky; top: 0; z-index: 20;
       background: var(--c-surf-mid);
@@ -70,6 +81,9 @@
     .nav-right { display: flex; align-items: center; gap: 10px; font-size: 10px; color: var(--c-green); }
     .nav-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--c-green); }
 
+    /* ========================= */
+    /* HERO */
+    /* ========================= */
     .hero {
       max-width: 760px; margin: 0 auto;
       padding: 4rem 2rem 3rem;
@@ -96,6 +110,9 @@
       letter-spacing: 0.04em;
     }
 
+    /* ========================= */
+    /* FORMULARIO */
+    /* ========================= */
     .audit-form {
       background: var(--c-surf-low);
       border: 1px solid var(--c-border);
@@ -130,6 +147,14 @@
     }
     .btn-run:hover { background: var(--c-orange-h); }
 
+    @media (max-width: 600px) {
+      .nav { padding: .9rem 1.2rem; }
+      .hero { padding: 3rem 1.2rem 2rem; }
+      .audit-form { margin-left: 1rem; margin-right: 1rem; }
+    }
+        /* ========================= */
+    /* LOADING */
+    /* ========================= */
     .loading-wrap {
       display: none; max-width: 600px; margin: 2rem auto;
       background: var(--c-surf-low); border: 1px solid var(--c-border);
@@ -156,6 +181,9 @@
     .step-dot.active { background: var(--c-orange); }
     .step-dot.done   { background: var(--c-green); }
 
+    /* ========================= */
+    /* RESULTADOS */
+    /* ========================= */
     .results-wrap {
       display: none; max-width: 700px; margin: 2rem auto 4rem;
     }
@@ -199,19 +227,32 @@
       border-radius: 20px; letter-spacing: .1em; flex-shrink: 0;
     }
     .severity-badge::before { content: ""; width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
-    .sev-high   { background: rgba(226,75,74,.12); color: var(--c-red);    border: 1px solid rgba(226,75,74,.3); }
-    .sev-high::before   { background: var(--c-red); }
+    .sev-high   { background: rgba(226,75,74,.12); color: var(--c-red); border: 1px solid rgba(226,75,74,.3); }
+    .sev-high::before { background: var(--c-red); }
     .sev-med    { background: rgba(210,153,34,.12); color: var(--c-yellow); border: 1px solid rgba(210,153,34,.3); }
-    .sev-med::before    { background: var(--c-yellow); }
+    .sev-med::before { background: var(--c-yellow); }
     .problem-locked {
       display: flex; align-items: center; gap: 8px;
       font-size: 11px; color: var(--c-text-muted);
       padding: 8px 12px; background: var(--c-surf-high);
       border-radius: 4px; margin-top: .8rem;
-      text-transform: none;
-      line-height: 1.6;
+      text-transform: none; line-height: 1.6;
     }
 
+    /* ========================= */
+    /* CTA / UNLOCK */
+    /* ========================= */
+    #unlock-bar {
+      display: none; max-width: 700px; margin: 0 auto 4rem;
+      background: var(--c-orange);
+      border-radius: 0 0 10px 10px;
+      padding: 1.4rem 1.6rem;
+      flex-direction: column; gap: 1rem;
+    }
+
+    /* ========================= */
+    /* FOOTER */
+    /* ========================= */
     .footer {
       background: var(--c-surf-mid); padding: 1.2rem 2.5rem;
       display: flex; justify-content: space-between; align-items: center;
@@ -220,15 +261,16 @@
     .footer p { font-size: 10px; color: var(--c-text-muted); }
 
     @media (max-width: 600px) {
-      .nav { padding: .9rem 1.2rem; }
-      .hero { padding: 3rem 1.2rem 2rem; }
-      .audit-form, .loading-wrap, .results-wrap { margin-left: 1rem; margin-right: 1rem; }
+      .loading-wrap, .results-wrap, #unlock-bar { margin-left: 1rem; margin-right: 1rem; }
       .rh-body { flex-direction: column; }
     }
   </style>
 </head>
 <body>
 
+  <!-- ========================= -->
+  <!-- NAV -->
+  <!-- ========================= -->
   <nav class="nav">
     <a class="logo" href="/">
       <img src="ignitia-logo.svg" alt="Ignitia" style="height:34px;width:auto;" />
@@ -239,12 +281,18 @@
     </div>
   </nav>
 
+  <!-- ========================= -->
+  <!-- HERO -->
+  <!-- ========================= -->
   <section class="hero">
     <div class="hero-pre">// DIAGNOSTICO_DIGITAL_GRATUITO</div>
     <h1 class="font-supply">¿Cuántos problemas<br>tiene tu sitio <span>ahora mismo?</span></h1>
     <p>Ingresa el nombre y URL de tu negocio. Nuestra IA analiza tu presencia digital en segundos y te muestra los problemas más críticos que están costándote clientes.</p>
   </section>
 
+  <!-- ========================= -->
+  <!-- FORMULARIO DE AUDITORÍA -->
+  <!-- ========================= -->
   <div class="audit-form fade-up" id="audit-form">
     <div class="form-header">
       <span>INIT_AUDIT_SCAN</span>
@@ -283,7 +331,9 @@
       </div>
     </div>
   </div>
-
+    <!-- ========================= -->
+  <!-- LOADING -->
+  <!-- ========================= -->
   <div class="loading-wrap" id="loading-wrap">
     <div class="loading-header">
       <span id="loading-title">SCANNING_DIGITAL_PRESENCE...</span>
@@ -313,31 +363,41 @@
     </div>
   </div>
 
+  <!-- ========================= -->
+  <!-- RESULTADOS -->
+  <!-- ========================= -->
   <div class="results-wrap" id="results-wrap">
     <div class="results-header">
       <div class="rh-top">
-        <span id="result-label">AUDIT_COMPLETE</span>
+        <span>AUDIT_COMPLETE</span>
         <span style="color:var(--c-green);font-size:10px;">● ANALISIS_LISTO</span>
       </div>
+
       <div class="rh-body">
         <div>
           <div class="font-supply biz-name" id="result-biz-name">—</div>
           <div class="biz-url" id="result-biz-url">—</div>
         </div>
+
         <div class="score-display">
-          <div class="font-supply score-num" id="result-score" style="color:var(--c-orange);">—</div>
+          <div class="font-supply score-num" id="result-score">—</div>
           <div class="score-label">SCORE DE FRICCIÓN / 10</div>
-          <div style="font-size:9px;color:var(--c-text-muted);margin-top:3px;">ENTRE MÁS ALTO, PEOR</div>
+          <div style="font-size:9px;color:var(--c-text-muted);margin-top:3px;">
+            ENTRE MÁS ALTO, PEOR
+          </div>
         </div>
       </div>
     </div>
 
+    <!-- PROBLEMAS -->
     <div class="problems-section">
       <div class="problems-title">
         <span>PROBLEMAS_DETECTADOS — VISTA PARCIAL</span>
         <span style="color:var(--c-orange);">2 DE VARIOS</span>
       </div>
-      <div class="problem-card" id="problem-1">
+
+      <!-- PROBLEMA 1 -->
+      <div class="problem-card">
         <div class="problem-top">
           <div class="problem-num">01</div>
           <div style="flex:1;">
@@ -347,11 +407,12 @@
           <span class="severity-badge" id="p1-sev">—</span>
         </div>
         <div class="problem-locked">
-          <span style="color:var(--c-text-muted);">🔒</span>
-          <span>Solución disponible en el reporte completo</span>
+          🔒 Solución disponible en el reporte completo
         </div>
       </div>
-      <div class="problem-card" id="problem-2">
+
+      <!-- PROBLEMA 2 -->
+      <div class="problem-card">
         <div class="problem-top">
           <div class="problem-num">02</div>
           <div style="flex:1;">
@@ -361,24 +422,67 @@
           <span class="severity-badge" id="p2-sev">—</span>
         </div>
         <div class="problem-locked">
-          <span style="color:var(--c-text-muted);">🔒</span>
-          <span>Solución disponible en el reporte completo</span>
+          🔒 Solución disponible en el reporte completo
         </div>
       </div>
     </div>
   </div>
 
+  <!-- ========================= -->
+  <!-- CTA / UNLOCK + WHATSAPP -->
+  <!-- ========================= -->
+  <div id="unlock-bar" style="display:none;max-width:700px;margin:0 auto 4rem;background:var(--c-orange);border-radius:0 0 10px 10px;padding:1.4rem 1.6rem;flex-direction:column;gap:1rem;">
+
+    <h3 style="color:#fff;font-size:18px;font-family:'Supply';">
+      ¿Quieres el reporte completo?
+    </h3>
+
+    <p style="font-size:11px;color:rgba(255,255,255,.85);line-height:1.7;text-transform:none;">
+      Incluye todos los problemas detectados, soluciones concretas y un plan de acción.
+    </p>
+
+    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+
+      <!-- BOTÓN WHATSAPP -->
+      <a 
+        href="https://wa.me/523349440999?text=Hola%20Juan,%20acabo%20de%20hacer%20la%20auditor%C3%ADa%20de%20Ignitia%20y%20quiero%20el%20reporte%20completo."
+        target="_blank"
+        style="background:#fff;color:var(--c-orange);padding:12px 20px;border-radius:4px;font-size:11px;font-weight:700;text-decoration:none;display:flex;align-items:center;gap:8px;">
+
+        💬 HABLAR POR WHATSAPP
+      </a>
+
+      <!-- BOTÓN CALENDLY -->
+      <a 
+        href="https://calendly.com/juansirtori/30min"
+        target="_blank"
+        style="background:transparent;color:#fff;border:1px solid rgba(255,255,255,.5);padding:12px 20px;border-radius:4px;font-size:11px;font-weight:700;text-decoration:none;">
+
+        AGENDAR SESIÓN →
+      </a>
+
+    </div>
+  </div>
+    <!-- ========================= -->
+  <!-- FOOTER -->
+  <!-- ========================= -->
   <footer class="footer">
     <a href="/">
       <img src="ignitia-logo.svg" alt="Ignitia" style="height:26px;width:auto;" />
     </a>
+
     <p>© 2026 IGNITIA · PERFORMANCE CONSULTING</p>
+
     <div style="display:flex;gap:12px;align-items:center;">
       <a href="/legal.html" style="font-size:10px;color:var(--c-text-muted);text-decoration:none;">LEGAL</a>
       <a href="/" style="font-size:10px;color:var(--c-text-muted);text-decoration:none;">← VOLVER AL SITIO</a>
     </div>
   </footer>
 
+  <!--SCRIPT (Lógica de la auditoría)-->
+    <!-- ========================= -->
+  <!-- SCRIPT / LÓGICA DEL AUDIT -->
+  <!-- ========================= -->
   <script>
     let auditData = {};
 
@@ -398,41 +502,46 @@
         alert('Por favor ingresa el nombre y URL del negocio.');
         return;
       }
+
       if (!email) {
-        alert('Por favor ingresa tu correo para recibir el reporte.');
+        alert('Por favor ingresa tu correo.');
         return;
       }
 
       auditData.email = email;
-      auditData.consentAccepted = true;
 
       document.getElementById('audit-form').style.display = 'none';
-      const loadingWrap = document.getElementById('loading-wrap');
-      loadingWrap.style.display = 'block';
+      document.getElementById('loading-wrap').style.display = 'block';
 
-      const steps = [1,2,3,4,5];
-      const pcts  = ['20%','40%','60%','80%','100%'];
+      const steps = [1, 2, 3, 4, 5];
+      const pcts = ['20%', '40%', '60%', '80%', '100%'];
+
       for (let i = 0; i < steps.length; i++) {
         await delay(900);
         document.getElementById(`dot-${steps[i]}`).classList.add('active');
         document.getElementById('loading-pct').textContent = pcts[i];
-        if (i > 0) document.getElementById(`dot-${steps[i-1]}`).classList.replace('active','done');
+
+        if (i > 0) {
+          document.getElementById(`dot-${steps[i - 1]}`).classList.replace('active', 'done');
+        }
       }
 
       try {
-        const result = await callClaude(name, url, email, true);
+        const result = await callAPI(name, url, email);
         showResults(name, url, result);
-      } catch(e) {
+      } catch (e) {
         console.error(e);
-        if (e.message !== 'rate_limited') showError();
+        if (e.message !== 'rate_limited') {
+          showError();
+        }
       }
     }
 
-    async function callClaude(name, url, email, consentAccepted) {
+    async function callAPI(name, url, email) {
       const response = await fetch('/.netlify/functions/analyze', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, url, email, consentAccepted })
+        body: JSON.stringify({ name, url, email, consentAccepted: true })
       });
 
       if (response.status === 429) {
@@ -463,35 +572,52 @@
       document.getElementById('loading-wrap').style.display = 'none';
 
       document.getElementById('result-biz-name').textContent = name.toUpperCase();
-      document.getElementById('result-biz-url').textContent   = url;
-      document.getElementById('result-score').textContent     = `${data.score}/10`;
+      document.getElementById('result-biz-url').textContent = url;
+      document.getElementById('result-score').textContent = `${data.score}/10`;
 
       const scoreEl = document.getElementById('result-score');
-      if (data.score >= 7)      scoreEl.style.color = 'var(--c-red)';
-      else if (data.score >= 5) scoreEl.style.color = 'var(--c-yellow)';
-      else                      scoreEl.style.color = 'var(--c-green)';
+      if (data.score >= 7) {
+        scoreEl.style.color = '#E24B4A';
+      } else if (data.score >= 5) {
+        scoreEl.style.color = '#d29922';
+      } else {
+        scoreEl.style.color = '#3fb950';
+      }
 
       const p = data.problems;
+
       document.getElementById('p1-title').textContent = p[0].title;
-      document.getElementById('p1-desc').textContent  = p[0].description;
+      document.getElementById('p1-desc').textContent = p[0].description;
+
       document.getElementById('p2-title').textContent = p[1].title;
-      document.getElementById('p2-desc').textContent  = p[1].description;
+      document.getElementById('p2-desc').textContent = p[1].description;
 
       setSeverity('p1-sev', p[0].severity);
       setSeverity('p2-sev', p[1].severity);
 
-      auditData = { name, url, score: data.score, email: auditData.email, consentAccepted: true };
+      auditData = {
+        name,
+        url,
+        score: data.score,
+        email: auditData.email,
+        consentAccepted: true
+      };
 
       document.getElementById('results-wrap').style.display = 'block';
+      document.getElementById('unlock-bar').style.display = 'flex';
 
       setTimeout(() => {
-        document.getElementById('results-wrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        document.getElementById('results-wrap').scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
       }, 200);
     }
 
-    function setSeverity(elId, sev) {
-      const el = document.getElementById(elId);
-      if (sev === 'HIGH') {
+    function setSeverity(id, severity) {
+      const el = document.getElementById(id);
+
+      if (severity === 'HIGH') {
         el.textContent = 'CRÍTICO';
         el.className = 'severity-badge sev-high';
       } else {
@@ -503,11 +629,12 @@
     function showError() {
       document.getElementById('loading-wrap').style.display = 'none';
       document.getElementById('audit-form').style.display = 'block';
-      document.getElementById('audit-form').style.border = '1px solid var(--c-red)';
-      alert('Hubo un error al analizar el sitio. Verifica la URL e intenta de nuevo.');
+      alert('Error al analizar. Intenta de nuevo.');
     }
 
-    function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+    function delay(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
 
     document.addEventListener('DOMContentLoaded', () => {
       const inputs = document.querySelectorAll('#biz-name, #biz-url, #biz-email');
@@ -522,7 +649,178 @@
       });
     });
   </script>
+    <!-- ========================= -->
+  <!-- SCRIPT / LÓGICA DEL AUDIT -->
+  <!-- ========================= -->
+  <script>
+    let auditData = {};
 
+    async function runAudit() {
+      const consent = document.getElementById('consent-checkbox');
+
+      if (!consent || !consent.checked) {
+        alert('Debes aceptar el aviso de privacidad para continuar.');
+        return;
+      }
+
+      const name  = document.getElementById('biz-name').value.trim();
+      const url   = document.getElementById('biz-url').value.trim();
+      const email = document.getElementById('biz-email').value.trim();
+
+      if (!name || !url) {
+        alert('Por favor ingresa el nombre y URL del negocio.');
+        return;
+      }
+
+      if (!email) {
+        alert('Por favor ingresa tu correo.');
+        return;
+      }
+
+      auditData.email = email;
+
+      document.getElementById('audit-form').style.display = 'none';
+      document.getElementById('loading-wrap').style.display = 'block';
+
+      const steps = [1, 2, 3, 4, 5];
+      const pcts = ['20%', '40%', '60%', '80%', '100%'];
+
+      for (let i = 0; i < steps.length; i++) {
+        await delay(900);
+        document.getElementById(`dot-${steps[i]}`).classList.add('active');
+        document.getElementById('loading-pct').textContent = pcts[i];
+
+        if (i > 0) {
+          document.getElementById(`dot-${steps[i - 1]}`).classList.replace('active', 'done');
+        }
+      }
+
+      try {
+        const result = await callAPI(name, url, email);
+        showResults(name, url, result);
+      } catch (e) {
+        console.error(e);
+        if (e.message !== 'rate_limited') {
+          showError();
+        }
+      }
+    }
+
+    async function callAPI(name, url, email) {
+      const response = await fetch('/.netlify/functions/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, url, email, consentAccepted: true })
+      });
+
+      if (response.status === 429) {
+        const data = await response.json();
+        showRateLimited(data.hoursLeft);
+        throw new Error('rate_limited');
+      }
+
+      if (!response.ok) {
+        throw new Error(`API error: ${response.status}`);
+      }
+
+      return response.json();
+    }
+
+    function showRateLimited(hoursLeft) {
+      document.getElementById('loading-wrap').style.display = 'none';
+      document.getElementById('audit-form').style.display = 'block';
+
+      const msg = document.getElementById('rate-limit-msg');
+      if (msg) {
+        msg.style.display = 'block';
+        msg.querySelector('#hours-left').textContent = hoursLeft;
+      }
+    }
+
+    function showResults(name, url, data) {
+      document.getElementById('loading-wrap').style.display = 'none';
+
+      document.getElementById('result-biz-name').textContent = name.toUpperCase();
+      document.getElementById('result-biz-url').textContent = url;
+      document.getElementById('result-score').textContent = `${data.score}/10`;
+
+      const scoreEl = document.getElementById('result-score');
+      if (data.score >= 7) {
+        scoreEl.style.color = '#E24B4A';
+      } else if (data.score >= 5) {
+        scoreEl.style.color = '#d29922';
+      } else {
+        scoreEl.style.color = '#3fb950';
+      }
+
+      const p = data.problems;
+
+      document.getElementById('p1-title').textContent = p[0].title;
+      document.getElementById('p1-desc').textContent = p[0].description;
+
+      document.getElementById('p2-title').textContent = p[1].title;
+      document.getElementById('p2-desc').textContent = p[1].description;
+
+      setSeverity('p1-sev', p[0].severity);
+      setSeverity('p2-sev', p[1].severity);
+
+      auditData = {
+        name,
+        url,
+        score: data.score,
+        email: auditData.email,
+        consentAccepted: true
+      };
+
+      document.getElementById('results-wrap').style.display = 'block';
+      document.getElementById('unlock-bar').style.display = 'flex';
+
+      setTimeout(() => {
+        document.getElementById('results-wrap').scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }, 200);
+    }
+
+    function setSeverity(id, severity) {
+      const el = document.getElementById(id);
+
+      if (severity === 'HIGH') {
+        el.textContent = 'CRÍTICO';
+        el.className = 'severity-badge sev-high';
+      } else {
+        el.textContent = 'IMPORTANTE';
+        el.className = 'severity-badge sev-med';
+      }
+    }
+
+    function showError() {
+      document.getElementById('loading-wrap').style.display = 'none';
+      document.getElementById('audit-form').style.display = 'block';
+      alert('Error al analizar. Intenta de nuevo.');
+    }
+
+    function delay(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const inputs = document.querySelectorAll('#biz-name, #biz-url, #biz-email');
+
+      inputs.forEach(input => {
+        input.addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            runAudit();
+          }
+        });
+      });
+    });
+  </script>
+    <!-- ========================= -->
+  <!-- NETLIFY FORM (LEADS) -->
+  <!-- ========================= -->
   <form name="audit-lead" data-netlify="true" hidden>
     <input type="text" name="nombre" />
     <input type="email" name="correo" />
