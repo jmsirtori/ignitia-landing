@@ -102,9 +102,13 @@ exports.handler = async (event) => {
     return { statusCode: 405, headers, body: JSON.stringify({ error: 'Method not allowed' }) };
   }
 
-  const ip = event.headers['x-forwarded-for']?.split(',')[0]?.trim()
-    || event.headers['client-ip']
-    || 'unknown';
+const ip = event.headers['x-forwarded-for']?.split(',')[0]?.trim()
+  || event.headers['client-ip']
+  || 'unknown';
+
+console.log('IP detectada:', ip);
+console.log('WHITELIST:', WHITELIST);
+console.log('Incluida:', WHITELIST.includes(ip));
 
   const rateCheck = isRateLimited(ip);
   if (rateCheck.limited) {
